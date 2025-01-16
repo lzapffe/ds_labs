@@ -25,17 +25,19 @@ the y values.
 
 ### Exercise 2
 
-The answers for this exercise are already provided to help guide you. Clean up the narrative to reflect what you want to submit. Let’s break it into steps:
-
 First, let's plot the data in the dino dataset:
 
 ```{r plot-dino, fig.height=3, fig.width=6}
+# Filtering the overall data set to only contain the data set "dino" and save this in a variable called "dino_data"
 dino_data <- datasaurus_dozen %>%
   filter(dataset == "dino")
 
+# Plot the "dino" data
 ggplot(data = dino_data, mapping = aes(x = x, y = y)) +
   geom_point()
 ```
+
+The plot shows a dinosaur.
 
 Next, let's calculate the correlation between `x` and `y` in this dataset:
 
@@ -43,8 +45,7 @@ Next, let's calculate the correlation between `x` and `y` in this dataset:
 dino_data %>%
   summarize(r = cor(x, y))
 ```
-Once you’ve cleaned up the text, add your own explanation or observations here!
-
+The correlation of the dinosaur data set is -0.064, so close to 0.
 
 ### Exercise 3
 
