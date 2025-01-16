@@ -75,13 +75,25 @@ The correlation for the star data is -0.063, which is very similar to that of th
 
 Add your code and narrative to complete this exercise. Use the conventions from the previous exercises to name your chunks and organize your work.
 
-```{r}
+```{r plot circle}
+# Filtering the overall data set to only contain the data set "circle" and save this in a variable called "circle_data"
+circle_data <- datasaurus_dozen %>%
+  filter(dataset == "circle")
 
+# Plot the "circle" data
+ggplot(data = circle_data, mapping = aes(x = x, y = y)) +
+  geom_point()
 ```
 
-```{r}
+The circle data does, not surprisingly, look like a circle.
 
+```{r circle cor}
+circle_data %>%
+  summarize(r = cor(x, y))
 ```
+
+The correlation for the circle data is -0.068, which is also very similar to that 
+of the dinosaur and the star.
 
 ### Exercise 5
 
