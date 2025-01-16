@@ -19,7 +19,9 @@ library(datasauRus)
 
 ### Exercise 1
 
-Remove this text, and add your answer for Exercise 1 here.
+The datasaurus_dozen data set has 1 846 rows and 3 variables (columns)
+The three variables are the data set (out of the 13 options),  the x values, and
+the y values.
 
 ### Exercise 2
 
