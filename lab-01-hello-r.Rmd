@@ -1,0 +1,85 @@
+---
+title: "Lab 01 - Hello R"
+author: "Insert your name here"
+date: "Insert date here"
+output: 
+  html_document: 
+    fig_height: 4
+    fig_width: 9
+---
+
+## Load packages and data
+
+```{r load-packages, message=FALSE}
+library(tidyverse) 
+library(datasauRus)
+```
+
+## Exercises
+
+### Exercise 1
+
+Remove this text, and add your answer for Exercise 1 here.
+
+### Exercise 2
+
+The answers for this exercise are already provided to help guide you. Clean up the narrative to reflect what you want to submit. Let’s break it into steps:
+
+First, let's plot the data in the dino dataset:
+
+```{r plot-dino, fig.height=3, fig.width=6}
+dino_data <- datasaurus_dozen %>%
+  filter(dataset == "dino")
+
+ggplot(data = dino_data, mapping = aes(x = x, y = y)) +
+  geom_point()
+```
+
+Next, let's calculate the correlation between `x` and `y` in this dataset:
+
+```{r cor-dino}
+dino_data %>%
+  summarize(r = cor(x, y))
+```
+Once you’ve cleaned up the text, add your own explanation or observations here!
+
+
+### Exercise 3
+
+This is your turn to write the code and narrative for the star dataset. Follow the same steps as above to complete the analysis. Don't forget to label your chunks appropriately!
+
+Note that the R chunks are labeled with `plot-star` and `cor-star` to provide spaces to place the code for plotting and calculating the correlation coefficient.
+To finish, clean up the narrative by removing these instructions.
+
+```{r plot-star}
+
+```
+
+I'm some filler text, you should replace me with more meaningful text...
+
+```{r cor-star}
+
+```
+Add your explanation here—what did you notice?
+
+
+### Exercise 4
+
+Add your code and narrative to complete this exercise. Use the conventions from the previous exercises to name your chunks and organize your work.
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+### Exercise 5
+
+This is your final exercise! Add code and narrative as needed. Be creative and show off what you’ve learned so far.
+Add code and narrative as needed.
+
+To add additional R chunks, you can either type the backticks, curly braces, and the letter `r`, or use the "Insert Chunk" button above (the green C+ icon). Have fun!
+
+
