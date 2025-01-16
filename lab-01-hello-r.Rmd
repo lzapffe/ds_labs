@@ -4,8 +4,9 @@ author: "Linn Zapffe"
 date: "16-01-2025"
 output: 
   html_document: 
-    fig_height: 4
-    fig_width: 9
+    fig_height: 7
+    highlight: tango
+    theme: flatly
 ---
 
 ## Load packages and data
@@ -27,7 +28,7 @@ the y values.
 
 First, let's plot the data in the dino dataset:
 
-```{r plot-dino, fig.height=3, fig.width=6}
+```{r plot-dino, fig.height=6, fig.width=6}
 # Filtering the overall data set to only contain the data set "dino" and save this in a variable called "dino_data"
 dino_data <- datasaurus_dozen %>%
   filter(dataset == "dino")
@@ -97,9 +98,26 @@ of the dinosaur and the star.
 
 ### Exercise 5
 
-This is your final exercise! Add code and narrative as needed. Be creative and show off what you’ve learned so far.
-Add code and narrative as needed.
+First, we plot all the data sets, separating them by color.
 
-To add additional R chunks, you can either type the backticks, curly braces, and the letter `r`, or use the "Insert Chunk" button above (the green C+ icon). Have fun!
+```{r plot all data sets}
+ggplot(datasaurus_dozen, aes(x = x, y = y, color = dataset)) +
+  geom_point() +
+  facet_wrap(~dataset, ncol = 3) +
+  theme(legend.position = "none")
+```
+
+Then, we calculate the correlation for all of the data sets.
+
+```{r correlation all data sets}
+datasaurus_dozen %>%
+  group_by(dataset) %>%
+  summarize(r = cor(x, y)) %>%
+  # Took out the 13 inside of print because it made it print only the data set names when knitting the document. Now, I get the correlations.
+  print()
+```
+
+All the correlations are somewhere around -0.06.
 
 
+Played around and changed the syntax highlighting to tango and the theme to flatly.
