@@ -1,17 +1,15 @@
----
-title: "Lab 02 - Plastic waste"
-author: "Linn Zapffe"
-date: "24/01/2025"
-output: github_document
----
+Lab 02 - Plastic waste
+================
+Linn Zapffe
+24/01/2025
 
 ## Load packages and data
 
-```{r load-packages, message=FALSE}
+``` r
 library(tidyverse) 
 ```
 
-```{r load-data, message=FALSE}
+``` r
 plastic_waste <- read.csv("data/plastic-waste.csv")
 ```
 
@@ -21,13 +19,19 @@ plastic_waste <- read.csv("data/plastic-waste.csv")
 
 Remove this text, and add your answer for Exercise 1 here.
 
-```{r plastic-waste-continent}
+``` r
 ggplot(data = plastic_waste, mapping = aes(x = plastic_waste_per_cap)) +
   geom_histogram() +
   facet_wrap(~ continent)
 ```
 
-```{r demon 1}
+    ## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
+
+    ## Warning: Removed 51 rows containing non-finite values (`stat_bin()`).
+
+![](lab-02_files/figure-gfm/plastic-waste-continent-1.png)<!-- -->
+
+``` r
 ggplot(
   data = plastic_waste,
   aes(x = plastic_waste_per_cap)
@@ -35,7 +39,11 @@ ggplot(
   geom_density()
 ```
 
-```{r demon 2}
+    ## Warning: Removed 51 rows containing non-finite values (`stat_density()`).
+
+![](lab-02_files/figure-gfm/demon%201-1.png)<!-- -->
+
+``` r
 ggplot(
   data = plastic_waste,
   mapping = aes(
@@ -46,7 +54,11 @@ ggplot(
   geom_density()
 ```
 
-```{r demon 3}
+    ## Warning: Removed 51 rows containing non-finite values (`stat_density()`).
+
+![](lab-02_files/figure-gfm/demon%202-1.png)<!-- -->
+
+``` r
 ggplot(
   data = plastic_waste,
   mapping = aes(
@@ -58,7 +70,11 @@ ggplot(
   geom_density()
 ```
 
-```{r demon 4}
+    ## Warning: Removed 51 rows containing non-finite values (`stat_density()`).
+
+![](lab-02_files/figure-gfm/demon%203-1.png)<!-- -->
+
+``` r
 ggplot(
   data = plastic_waste,
   mapping = aes(
@@ -70,10 +86,13 @@ ggplot(
   geom_density(alpha = 0.7)
 ```
 
+    ## Warning: Removed 51 rows containing non-finite values (`stat_density()`).
+
+![](lab-02_files/figure-gfm/demon%204-1.png)<!-- -->
 
 ### Exercise 2
 
-```{r plastic-waste-density}
+``` r
 ggplot(
   data = plastic_waste,
   mapping = aes(
@@ -85,13 +104,20 @@ ggplot(
   geom_density(alpha = 0.45)
 ```
 
-What we add to aes() is what variables we somehow want to divide up our data by. So there is a difference for each instance. For example, an axis with all possible scores or a color for each continent. The things we add in the geom, such as alpha, is the same for all the data.
+    ## Warning: Removed 51 rows containing non-finite values (`stat_density()`).
+
+![](lab-02_files/figure-gfm/plastic-waste-density-1.png)<!-- -->
+
+What we add to aes() is what variables we somehow want to divide up our
+data by. So there is a difference for each instance. For example, an
+axis with all possible scores or a color for each continent. The things
+we add in the geom, such as alpha, is the same for all the data.
 
 ### Exercise 3
 
 Remove this text, and add your answer for Exercise 3 here.
 
-```{r plastic-waste-violin}
+``` r
 # insert code here
 ```
 
@@ -99,19 +125,19 @@ Remove this text, and add your answer for Exercise 3 here.
 
 Remove this text, and add your answer for Exercise 4 here.
 
-```{r plastic-waste-mismanaged}
+``` r
 # insert code here
 ```
 
-```{r plastic-waste-mismanaged-continent}
+``` r
 # insert code here
 ```
 
-```{r plastic-waste-population-total}
+``` r
 # insert code here
 ```
 
-```{r plastic-waste-population-coastal}
+``` r
 # insert code here
 ```
 
@@ -119,8 +145,6 @@ Remove this text, and add your answer for Exercise 4 here.
 
 Remove this text, and add your answer for Exercise 5 here.
 
-```{r recreate-viz}
+``` r
 # insert code here
 ```
-
-
