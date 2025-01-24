@@ -89,31 +89,62 @@ What we add to aes() is what variables we somehow want to divide up our data by.
 
 ### Exercise 3
 
-Remove this text, and add your answer for Exercise 3 here.
+```{r demon 5}
+ggplot(
+  data = plastic_waste,
+  mapping = aes(
+    x = continent,
+    y = plastic_waste_per_cap
+  )
+) +
+  geom_boxplot()
+```
+
+Changing it to violin plots
 
 ```{r plastic-waste-violin}
-# insert code here
+ggplot(
+  data = plastic_waste,
+  mapping = aes(
+    x = continent,
+    y = plastic_waste_per_cap
+  )
+) +
+  geom_violin()
 ```
+
+It is a lot easier to see the distributions with the violing plots than the box plots. With the box plots you have to interpret where the median is relative to the interquartiles, while for the violin plots, it is very easy to see whether there is more data for lower or higher values just by looking at the shape of it. You also see "all" the scores in the distribution and not just the 5 summary statistics.
+
 
 ### Exercise 4
 
 Remove this text, and add your answer for Exercise 4 here.
 
 ```{r plastic-waste-mismanaged}
-# insert code here
+ggplot(data = plastic_waste, mapping = aes(x = plastic_waste_per_cap, y = mismanaged_plastic_waste_per_cap)) + 
+  geom_point()
 ```
+
+There doesn't seem to be that much of a relationship between plastic waste per capita and mismanaged plastic waste capita. There is a weak positive relationship. The relationship seems fairly consistent though.
 
 ```{r plastic-waste-mismanaged-continent}
-# insert code here
+ggplot(data = plastic_waste, mapping = aes(x = plastic_waste_per_cap, y = mismanaged_plastic_waste_per_cap, color = continent)) + 
+  geom_point()
 ```
 
+I don't see any clear distinctions for this relationship based on continent. Except for the fact that Africa has a very clear (but weak) positive relationship. The other continents seem to have a relationship that is a little less consistent.
+
 ```{r plastic-waste-population-total}
-# insert code here
+ggplot(data = plastic_waste, mapping = aes(x = plastic_waste_per_cap, y = total_pop)) + 
+  geom_point()
 ```
 
 ```{r plastic-waste-population-coastal}
-# insert code here
+ggplot(data = plastic_waste, mapping = aes(x = plastic_waste_per_cap, y = coastal_pop)) + 
+  geom_point()
 ```
+
+The relationship for both of these graphs is still fairly weak. However, there seems to be more of a relationship for coastal population, which has more of a line, than total population, where most of the data is centered for lower values of the total population and some centered at higher values, but fewer in the middle of the relationship.
 
 ### Exercise 5
 
