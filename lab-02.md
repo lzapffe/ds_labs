@@ -17,7 +17,7 @@ plastic_waste <- read.csv("data/plastic-waste.csv")
 
 ### Exercise 1
 
-Remove this text, and add your answer for Exercise 1 here.
+Plotting plastic waste per continent:
 
 ``` r
 ggplot(data = plastic_waste, mapping = aes(x = plastic_waste_per_cap)) +
@@ -31,6 +31,8 @@ ggplot(data = plastic_waste, mapping = aes(x = plastic_waste_per_cap)) +
 
 ![](lab-02_files/figure-gfm/plastic-waste-continent-1.png)<!-- -->
 
+Density plot:
+
 ``` r
 ggplot(
   data = plastic_waste,
@@ -41,7 +43,8 @@ ggplot(
 
     ## Warning: Removed 51 rows containing non-finite values (`stat_density()`).
 
-![](lab-02_files/figure-gfm/demon%201-1.png)<!-- -->
+![](lab-02_files/figure-gfm/demon%201-1.png)<!-- --> Density plot with
+one curve per continent:
 
 ``` r
 ggplot(
@@ -58,6 +61,8 @@ ggplot(
 
 ![](lab-02_files/figure-gfm/demon%202-1.png)<!-- -->
 
+Density plot with one colored-in curve per continent:
+
 ``` r
 ggplot(
   data = plastic_waste,
@@ -72,7 +77,9 @@ ggplot(
 
     ## Warning: Removed 51 rows containing non-finite values (`stat_density()`).
 
-![](lab-02_files/figure-gfm/demon%203-1.png)<!-- -->
+![](lab-02_files/figure-gfm/demon%203-1.png)<!-- --> Changing the
+transparency (alpha) so that it is easier to see the overlapping density
+curves:
 
 ``` r
 ggplot(
@@ -92,6 +99,9 @@ ggplot(
 
 ### Exercise 2
 
+Lowering the alpha (transparency) to find a value that leads to an
+easily interpretable graph. I ended up liking an alpha of 0.45.
+
 ``` r
 ggplot(
   data = plastic_waste,
@@ -108,12 +118,15 @@ ggplot(
 
 ![](lab-02_files/figure-gfm/plastic-waste-density-1.png)<!-- -->
 
-What we add to aes() is what variables we somehow want to divide up our
-data by. So there is a difference for each instance. For example, an
-axis with all possible scores or a color for each continent. The things
-we add in the geom, such as alpha, is the same for all the data.
+Note to myself: what we add to aes() is what variables we somehow want
+to divide up our data by. So there is a difference for each instance.
+For example, an axis with all possible scores or a color for each
+continent. The things we add in the geom, such as alpha, is the same for
+all the data.
 
 ### Exercise 3
+
+Box plots divided up by continent:
 
 ``` r
 ggplot(
@@ -130,7 +143,7 @@ ggplot(
 
 ![](lab-02_files/figure-gfm/demon%205-1.png)<!-- -->
 
-Changing it to violin plots
+Changing the box plots to violin plots:
 
 ``` r
 ggplot(
@@ -147,16 +160,17 @@ ggplot(
 
 ![](lab-02_files/figure-gfm/plastic-waste-violin-1.png)<!-- -->
 
-It is a lot easier to see the distributions with the violing plots than
-the box plots. With the box plots you have to interpret where the median
-is relative to the interquartiles, while for the violin plots, it is
-very easy to see whether there is more data for lower or higher values
-just by looking at the shape of it. You also see “all” the scores in the
-distribution and not just the 5 summary statistics.
+It is a lot easier to see the distributions of the data with the violin
+plots than the box plots. With the box plots you have to interpret where
+the median is relative to the interquartile values, while for the violin
+plots, it is very easy to see whether there is more data for lower or
+higher values just by looking at the shape of it. You also see “all” the
+scores in the distribution and not just the 5 summary statistics.
 
 ### Exercise 4
 
-Remove this text, and add your answer for Exercise 4 here.
+Making a scatterplot between plastic waste per capita and mismanaged
+plastic waste per capita:
 
 ``` r
 ggplot(data = plastic_waste, mapping = aes(x = plastic_waste_per_cap, y = mismanaged_plastic_waste_per_cap)) + 
@@ -167,9 +181,10 @@ ggplot(data = plastic_waste, mapping = aes(x = plastic_waste_per_cap, y = misman
 
 ![](lab-02_files/figure-gfm/plastic-waste-mismanaged-1.png)<!-- -->
 
-There doesn’t seem to be that much of a relationship between plastic
-waste per capita and mismanaged plastic waste capita. There is a weak
-positive relationship. The relationship seems fairly consistent though.
+There seems to be a fairly strong positive relationship between plastic
+waste per capita and mismanaged plastic waste capita.
+
+Coloring the data points by continent:
 
 ``` r
 ggplot(data = plastic_waste, mapping = aes(x = plastic_waste_per_cap, y = mismanaged_plastic_waste_per_cap, color = continent)) + 
@@ -180,10 +195,12 @@ ggplot(data = plastic_waste, mapping = aes(x = plastic_waste_per_cap, y = misman
 
 ![](lab-02_files/figure-gfm/plastic-waste-mismanaged-continent-1.png)<!-- -->
 
-I don’t see any clear distinctions for this relationship based on
-continent. Except for the fact that Africa has a very clear (but weak)
-positive relationship. The other continents seem to have a relationship
-that is a little less consistent.
+There are some differences in the relationship between the variables
+based on the continent. For example North America seems to have almost a
+curved relationship between these variables. Africa, seem to instead
+have a very strong linear association between the variables.
+
+Visualizing plastic waste per capita and total population:
 
 ``` r
 ggplot(data = plastic_waste, mapping = aes(x = plastic_waste_per_cap, y = total_pop)) + 
@@ -194,6 +211,8 @@ ggplot(data = plastic_waste, mapping = aes(x = plastic_waste_per_cap, y = total_
 
 ![](lab-02_files/figure-gfm/plastic-waste-population-total-1.png)<!-- -->
 
+Visualizing plastic waste per capita and coastal population:
+
 ``` r
 ggplot(data = plastic_waste, mapping = aes(x = plastic_waste_per_cap, y = coastal_pop)) + 
   geom_point()
@@ -203,13 +222,23 @@ ggplot(data = plastic_waste, mapping = aes(x = plastic_waste_per_cap, y = coasta
 
 ![](lab-02_files/figure-gfm/plastic-waste-population-coastal-1.png)<!-- -->
 
-The relationship for both of these graphs is still fairly weak. However,
-there seems to be more of a relationship for coastal population, which
-has more of a line, than total population, where most of the data is
-centered for lower values of the total population and some centered at
-higher values, but fewer in the middle of the relationship.
+There doesn’t really seem to be that much of a relationship in any of
+these graphs, as the plastic waste per capita is fairly similar
+regardless of the total population or coastal population. There is a
+chance that there would be a more clear relationship if you removed the
+outlier though, as that makes the scale for plastic waste so extended
+that it is hard to distinguish the data points that are all clustered
+between 0 and 1 for plastic waste per capita. However, if there is a
+more clear relationship when removing the outlier this would probably be
+stronger for coastal population than total population, as the data for
+the total population is mostly centered at either lower or higher values
+of total population, with fewer in the middle of the relationship. This
+would make it harder to detect a consistent relationship/correlation for
+total population compared to coastal population.
 
 ### Exercise 5
+
+Testing out the filter code before putting it into the plot:
 
 ``` r
 filter(plastic_waste, plastic_waste_per_cap < 3)
@@ -219,7 +248,10 @@ filter(plastic_waste, plastic_waste_per_cap < 3)
 
 I hid the output, since we don’t need 188 rows of data displayed.
 
+Trying to recreate the plot:
+
 ``` r
+# Loading the library that has the function to change the colors to those in the plot
 library(viridis)
 ```
 
@@ -228,18 +260,27 @@ library(viridis)
     ## Loading required package: viridisLite
 
 ``` r
+# Calculating and saving the new variable, coastal proportion. This could also have been done with a pipeline
 plastic_waste$coastal_proportion <- plastic_waste$coastal_pop / plastic_waste$total_pop
 
+# Plotting the data
 plastic_waste %>% 
+  # Only plotting data with plastic waste per capita under 3, to remove outliers
   filter(plastic_waste_per_cap < 3) %>%
+    # Making the plot in ggplot
     ggplot(mapping = aes(x = coastal_proportion, y = plastic_waste_per_cap)) +
+      # Adding the data points and changing color based on continent
       geom_point(mapping = aes(color = continent)) +
+      # Adding the trend line
       geom_smooth(color = "black") +
+    # Changing the color scheme of the plot
     scale_color_viridis_d() +
+    # Adding labels to the plot
     labs(title = "Plastic waste vs. coastal population proportion",
          subtitle = "by continent",
          x = "Coastal population proportion (Coastal / total population)", y = "Plastic waste per capita",
          color = "Continent") +
+          # Changing the theme to remove the background, but keep the grid lines
           theme_bw()
 ```
 
@@ -250,6 +291,9 @@ plastic_waste %>%
     ## Warning: Removed 10 rows containing missing values (`geom_point()`).
 
 ![](lab-02_files/figure-gfm/recreate-viz-1.png)<!-- -->
+
+This is the answer taken from the code of the webpage to compare to my
+code. This was retrieved after making the above plot.
 
 ``` r
 plastic_waste %>%
@@ -281,14 +325,19 @@ plastic_waste %>%
 
 ![](lab-02_files/figure-gfm/answer%20from%20code-1.png)<!-- -->
 
-Why can you put continent inside of aesthetics for ggplot, without
-getting smooth properties for each continent, while when I try with
-this, code, I get a line for each continent?
+After looking at the code used to make the assignment, I have the
+following question: Why can the assignment code put continent inside of
+aesthetics for ggplot, without getting smooth properties for each
+continent, while when I try with this, code, I get a line for each
+continent?
 
-Apparently, it is because of the color = black part of geom_smooth(). I
-don’t fully understand why that is the case. Wouldn’t color just make
-the line following the data set black? See the two code blocks with
-color = black and not in geom_smooth().
+After some testing: Apparently, you don’t get one smooth line per
+continent if you add color = black to geom_smooth(). I don’t fully
+understand why that is the case. Wouldn’t color just make all the lines
+black? The next two code blocks show the difference between having color
+= “black” or not in geom_smooth().
+
+With color = “black”:
 
 ``` r
 library(viridis)
@@ -316,6 +365,8 @@ plastic_waste %>%
 
 ![](lab-02_files/figure-gfm/testing-1.png)<!-- -->
 
+Without color = “black”
+
 ``` r
 library(viridis)
 
@@ -342,7 +393,8 @@ plastic_waste %>%
 
 ![](lab-02_files/figure-gfm/testing%202-1.png)<!-- -->
 
-Apart from this, it looks like the only difference is that I used
-theme_bw instead of theme_minimal(). From what I can see,
-theme_minimal() also makes the outline of the plot dissapear. The rest
-looks identical.
+Apart from this, it looks like the only difference between our plots is
+that I used theme_bw instead of theme_minimal(). From what I can see,
+theme_minimal() also makes the outline of the plot dissappear, which
+isn’t the case with theme_bw(). Overall, the plot seem to have been
+recreated fairly well.
