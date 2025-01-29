@@ -72,12 +72,33 @@ Most of the winners were in the US when they won, but many of them were also out
 
 ### Exercise 4
 
-...
+```{r var_born}
+nobel_living_science <- nobel_living_science %>%
+  mutate(
+    born_country_us = if_else(born_country == "USA", "USA", "Other")
+  )
+```
+
+Out of the winners, `r nobel_living_science %>% summarize(count = sum(born_country_us == "USA"))` were born in the US and `r nobel_living_science %>% summarize(count = sum(born_country_us == "Other"))` were born in other countries.
 
 ### Exercise 5
 
-...
+```{r plot_area_and_born}
+ggplot(nobel_living_science, mapping = aes(x = country_us, fill = born_country_us)) +
+  geom_bar() +
+  facet_wrap(~category) +
+  coord_flip()
+```
+
+Most of the winners in the US were born in the US, but there is a pretty significant portion of winners that were born other places. I would say that Buzzfeed has a point about immigrants being good for the research environment in the US.
 
 ### Exercise 6
 
-...
+```{r freq_plot_country}
+nobel_living_science %>% 
+  filter(country != "USA" & born_country_us == "Other") %>%
+  count(born_country) %>%
+  arrange(desc(n))
+```
+
+The most common country for immigrants was Japan, with 14 winners.

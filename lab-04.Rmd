@@ -1,11 +1,18 @@
 ---
 title: "Lab 04 - La Quinta is Spanish for next to Denny's, Pt. 1"
-author: "Insert your name here"
-date: "Insert date here"
+author: "Linn Zapffe"
+date: "29/1/2025"
 output: github_document
 ---
 
 ### Load packages and data
+
+```{r install_dsbox}
+# Ran this code and then commented it out so that it isn't re-run everytime this document is knitted
+#install.packages("devtools")
+#devtools::install_github("rstudio-education/dsbox")
+```
+
 
 ```{r load-packages, message = FALSE}
 library(tidyverse) 
@@ -18,34 +25,69 @@ states <- read_csv("data/states.csv")
 
 ### Exercise 1
 
-Remove this text, and add your answer for Exercise 1 here.
-Add code chunks as needed.
-Don't forget to label your code chunk.
-Do not use spaces in code chunk labels.
+The dimensions of the Denny's data set are `r nrow(dennys)` rows and `r ncol(dennys)` columns. Each row is a Denny's location and the 6 variables are: `r names(dennys)`.
+
 
 ### Exercise 2
 
-Remove this text, and add your answer for Exercise 2 here.
-Add code chunks as needed.
-Don't forget to label your code chunk.
-Do not use spaces in code chunk labels.
+The dimensions of the La Quinta data set are `r nrow(laquinta)` rows and `r ncol(laquinta)` columns. Each row is a La Quinta location and the 6 variables are: `r names(laquinta)`. These variables are the same as for the Denny's locations data set.
 
 ### Exercise 3
 
-...
+Whether there are any Denny's locations outside of the US depends on the definition. Isn't Texas its own country? If not, then there are no Denny's outside of the US.
+
+La Quinta has locations all over the world, even though most of them are in the US. The countries are Canada, Mexico, China, New Zealand, Turkey, United Arab Emirates, Chile, Columbia, and Equador.
 
 ### Exercise 4
 
-...
+I would assume the state would be missing if the location is outside of the US, so I would filter on state being missing.
 
 ### Exercise 5
 
-...
+```{r filter_dennys_not_US}
+dennys %>%
+  filter(!(state %in% states$abbreviation))
+```
+
+There are no Denny's locations outside of the US.
 
 ### Exercise 6
 
-...
+```{r dennys_country_var}
+dennys <- dennys %>%
+  mutate(country = "United States")
+```
+
 
  
-Add exercise headings as needed.
+### Exercise 7
+
+```{r filter_laquinta_not_US}
+laquinta %>%
+  filter(!(state %in% states$abbreviation))
+```
+
+The countries were listed already in question 3, see for reference.
+
+### Exercise 8
+
+```{r add_country_var_laquinta}
+laquinta <- laquinta %>%
+  mutate(country = case_when(
+    state %in% state.abb ~ "United States",
+    state %in% c("ON", "BC") ~ "Canada",
+    state == "ANT" ~ "Colombia",
+    state %in% c("AG", "QR", "CH", "NL", "VE", "PU", "SL") ~ "Mexico",
+    state == "FM" ~ "Honduras"
+  ))
+```
+
+This countries I found by Googling did not seem to be the same as from the La Quinta webpage. There was no Honduras on the webpage and there are a lot of countries on the webpage missing in the data set. My best guess is that the data set is older than the webpage and not updated with all  the current locations.
+
+```{r filter_US}
+laquinta <- laquinta %>%
+  filter(country == "United States")
+```
+
+### Exercise 9
 
