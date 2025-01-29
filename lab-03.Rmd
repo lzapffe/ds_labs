@@ -1,7 +1,7 @@
 ---
 title: "Lab 03 - Nobel laureates"
-author: "Insert your name here"
-date: "Insert date here"
+author: "Linn Zapffe"
+date: "28/1/2025"
 output: github_document
 ---
 
@@ -19,24 +19,56 @@ nobel <- read_csv("data/nobel.csv")
 
 ### Exercise 1
 
-Remove this text, and add your answer for Exercise 1 here.
-Add code chunks as needed.
-Don't forget to label your code chunk.
-Do not use spaces in code chunk labels.
+The data frame has `r nrow(nobel)` observations and `r ncol(nobel)` columns. Each row is one winner of the Nobel price.
 
 ### Exercise 2
 
-Remove this text, and add your answer for Exercise 1 here.
-Add code chunks as needed.
-Don't forget to label your code chunk.
-Do not use spaces in code chunk labels.
+Making a new data frame called nobel_living, filtering after several criteria
+```{r create-nobel_living}
+nobel_living <- nobel %>%
+    # Filter by if they have a country listed
+  filter(!is.na(country)) %>%
+    # Filter out organizations
+  filter(gender != "org") %>%
+    # Filter out individuals that are dead
+  filter(is.na(died_date))
+```
+
+Trying to do the same with one filter statement:
+```{r create-nobel_living-sec}
+nobel %>%
+    # Filter by several conditions in one argument
+  filter(!is.na(country) & gender != "org" & is.na(died_date))
+```
+
+Both of the above codes worked.
+
+The new data frame has `r nrow(nobel_living)` observations.
 
 ### Exercise 3
 
-Remove this text, and add your answer for Exercise 1 here.
-Add code chunks as needed.
-Don't forget to label your code chunk.
-Do not use spaces in code chunk labels.
+New variable to see whether the winners were in the US when winning the price
+```{r mut_liv_US}
+nobel_living <- nobel_living %>%
+  mutate(
+    country_us = if_else(country == "USA", "USA", "Other")
+  )
+```
+
+Creating new variable for area of science
+```{r mut_area}
+nobel_living_science <- nobel_living %>%
+  filter(category %in% c("Physics", "Medicine", "Chemistry", "Economics"))
+```
+
+```{r plot_box_area}
+ggplot(nobel_living_science, mapping = aes(x = country_us)) +
+  geom_bar() +
+  facet_wrap(~category) +
+  coord_flip()
+```
+
+Most of the winners were in the US when they won, but many of them were also outside of the US. I don't know whether looking at only category of price and where they won the price has anything to say about immigration. Need more information.
 
 ### Exercise 4
 
