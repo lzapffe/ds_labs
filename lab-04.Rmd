@@ -91,3 +91,109 @@ laquinta <- laquinta %>%
 
 ### Exercise 9
 
+```{r most_locations_states_dennys}
+dennys %>%
+  count(state) %>%
+  arrange(desc(n))
+```
+
+There are the most Denny's locations in California.
+
+```{r most_locations_states_laquinta}
+laquinta %>%
+  count(state) %>%
+  arrange(desc(n))
+```
+
+There are the most La Quinta locations in Texas.
+
+It is a little surprising that they don't have the highest number in the same state, since they are (argued) to always occur together. Other than that, I don't know enough about the different states or stereotypes of the different states to evaluate the specific state further.
+
+### Exercise 10
+
+```{r loc_per_mile_dennys}
+dennys %>%
+  count(state) %>%
+  inner_join(states, by = c("state" = "abbreviation")) %>% 
+  mutate(loc_per_mile = area / 1000 / n) %>% 
+  arrange(loc_per_mile)
+```
+
+We used inner join here as it found each row that matched (the US states) and kept the variables from the two data sets from those rows.
+
+There are the most locations of Denny's per thousand square miles in the District of Columbia. I didn't even know that that was a state.
+
+
+```{r loc_per_mile_laquinta}
+laquinta %>%
+  count(state) %>%
+  inner_join(states, by = c("state" = "abbreviation")) %>% 
+  mutate(loc_per_mile = area / 1000 / n) %>% 
+  arrange(loc_per_mile)
+```
+
+There are the most of La Quinta locations per thousand square miles in Rhode Island.
+
+
+### Exercise 11
+
+```{r type_var}
+dennys <- dennys %>%
+  mutate(establishment = "Denny's")
+laquinta <- laquinta %>%
+  mutate(establishment = "La Quinta")
+```
+
+```{r added}
+dn_lq <- bind_rows(dennys, laquinta)
+```
+
+```{r scatterplot_map}
+ggplot(dn_lq, mapping = aes(
+  x = longitude,
+  y = latitude,
+  color = establishment
+)) +
+  geom_point()
+```
+
+```{r scatter_plot_NC}
+dn_lq %>% 
+  filter(state == "NC") %>% 
+  ggplot(dn_lq, mapping = aes(
+    x = longitude,
+    y = latitude,
+    color = establishment
+  )) +
+    geom_point(alpha = 0.25) +
+  labs(
+    title = "Geographical Locations of Denny's and La Quintas in North Carolina",
+    color = "Establishment",
+    x = "Longitude",
+    y = "Latitude"
+  )
+```
+
+The joke doesn't really seem to hold based on the locations in North Carolina, as there are only a few locations at the same place.
+
+
+### Exercise 12
+
+```{r scatter_plot_TX}
+dn_lq %>% 
+  filter(state == "TX") %>% 
+  ggplot(dn_lq, mapping = aes(
+    x = longitude,
+    y = latitude,
+    color = establishment
+  )) +
+    geom_point(alpha = 0.25) +
+  labs(
+    title = "Geographical Locations of Denny's and La Quintas in Texas",
+    color = "Establishment",
+    x = "Longitude",
+    y = "Latitude"
+  )
+```
+
+The claim seems more supported in Texas, as there are clusters with these locations, where several of them seem to overlap (i.e. being in the same location).
