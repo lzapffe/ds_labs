@@ -62,13 +62,19 @@ nobel_living_science <- nobel_living %>%
 ```
 
 ```{r plot_box_area}
-ggplot(nobel_living_science, mapping = aes(x = country_us)) +
+ggplot(nobel_living_science, mapping = aes(x = country_us, fill = country_us)) +
   geom_bar() +
   facet_wrap(~category) +
-  coord_flip()
+  coord_flip() +
+  guides(fill = FALSE) +
+  labs(
+    title = "Location of Nobel prize winners at the time they won the prize, divided by area",
+    x = "Country of residence at the time of winning the price",
+    y = "Number of winners"
+  )
 ```
 
-Most of the winners were in the US when they won, but many of them were also outside of the US. I don't know whether looking at only category of price and where they won the price has anything to say about immigration. Need more information.
+Most of the winners were in the US when they won, but many of them were also outside of the US. The graph doesn't technically say that much about immigration, because we don't know how many of these winners were born in a different country.
 
 ### Exercise 4
 
@@ -87,18 +93,24 @@ Out of the winners, `r nobel_living_science %>% summarize(count = sum(born_count
 ggplot(nobel_living_science, mapping = aes(x = country_us, fill = born_country_us)) +
   geom_bar() +
   facet_wrap(~category) +
-  coord_flip()
+  coord_flip() +
+  labs(
+    title = "Location of Nobel prize winners at the time they won the prize, divided by area and the country they were born in",
+    x = "Country of residence at the time of winning the price",
+    y = "Number of winners",
+    fill = "Country born in"
+  )
 ```
 
-Most of the winners in the US were born in the US, but there is a pretty significant portion of winners that were born other places. I would say that Buzzfeed has a point about immigrants being good for the research environment in the US.
+Most of the winners in the US were born in the US, but there is a pretty significant portion of winners that were born in other countries too. I would say that Buzzfeed has a point about immigrants being good for the research environment in the US.
 
 ### Exercise 6
 
 ```{r freq_plot_country}
 nobel_living_science %>% 
-  filter(country != "USA" & born_country_us == "Other") %>%
+  filter(country == "USA" & born_country_us == "Other") %>%
   count(born_country) %>%
   arrange(desc(n))
 ```
 
-The most common country for immigrants was Japan, with 14 winners.
+The most common country for immigrants was Germany, with 7 winners.
