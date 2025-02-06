@@ -25,24 +25,28 @@ states <- read_csv("data/states.csv")
 
 ### Exercise 1
 
-The dimensions of the Denny's data set are `r nrow(dennys)` rows and `r ncol(dennys)` columns. Each row is a Denny's location and the 6 variables are: `r names(dennys)`.
+The Denny's data set consist of `r nrow(dennys)` rows and `r ncol(dennys)` columns. Each row is a Denny's location and the 6 variables are: `r names(dennys)`.
 
 
 ### Exercise 2
 
-The dimensions of the La Quinta data set are `r nrow(laquinta)` rows and `r ncol(laquinta)` columns. Each row is a La Quinta location and the 6 variables are: `r names(laquinta)`. These variables are the same as for the Denny's locations data set.
+The La Quinta data set consists of `r nrow(laquinta)` rows and `r ncol(laquinta)` columns. Each row is a La Quinta location and the 6 variables are: `r names(laquinta)`. These variables are the same as the ones in the Denny's data set.
 
 ### Exercise 3
 
-Whether there are any Denny's locations outside of the US depends on the definition. Isn't Texas its own country? If not, then there are no Denny's outside of the US.
+There are no Denny's outside of the US.
 
-La Quinta has locations all over the world, even though most of them are in the US. The countries are Canada, Mexico, China, New Zealand, Turkey, United Arab Emirates, Chile, Columbia, and Equador.
+La Quinta has locations all over the world, even though most of them are in the US. The countries (outside of the US) that have at least one La Quinta are Canada, Mexico, China, New Zealand, Turkey, United Arab Emirates, Chile, Columbia, and Equador.
 
 ### Exercise 4
 
-I would assume the state would be missing if the location is outside of the US, so I would filter on state being missing.
+I would assume the state would be missing if the location is outside of the US, so my first instinct is to filter on state being missing.
+
+Looking ahead it looks like I was close. There are data for states for the locations outside of the US. However, I was on the right track.
 
 ### Exercise 5
+
+Filtering the Denny's data set by states that are not US states:
 
 ```{r filter_dennys_not_US}
 dennys %>%
@@ -53,23 +57,28 @@ There are no Denny's locations outside of the US.
 
 ### Exercise 6
 
+Adding a country variable to the Denny's data set. We don't need any if statements since all the Denny's locations are in the US.
+
 ```{r dennys_country_var}
 dennys <- dennys %>%
   mutate(country = "United States")
 ```
 
 
- 
 ### Exercise 7
+
+Filtering the La Quinta data set on locations not in US states:
 
 ```{r filter_laquinta_not_US}
 laquinta %>%
   filter(!(state %in% states$abbreviation))
 ```
 
-The countries were listed already in question 3, see for reference.
+The states ON and BC belong to Canda, ANT to Colombia, AG, QR, CH, NL, VE, PU, and SL to Mexico, and FM to Honduras. The locations in the other countries that are not listed here might be too new to be in this data set.
 
 ### Exercise 8
+
+Creating a new variable with the country of the location of the La Quinta, based on the state of the location:
 
 ```{r add_country_var_laquinta}
 laquinta <- laquinta %>%
@@ -82,7 +91,8 @@ laquinta <- laquinta %>%
   ))
 ```
 
-This countries I found by Googling did not seem to be the same as from the La Quinta webpage. There was no Honduras on the webpage and there are a lot of countries on the webpage missing in the data set. My best guess is that the data set is older than the webpage and not updated with all  the current locations.
+
+Filtering to only see locations in the US and saving that in the general data set:
 
 ```{r filter_US}
 laquinta <- laquinta %>%
@@ -90,6 +100,8 @@ laquinta <- laquinta %>%
 ```
 
 ### Exercise 9
+
+Arranging and counting Denny's based on what state they are located in:
 
 ```{r most_locations_states_dennys}
 dennys %>%
@@ -99,6 +111,9 @@ dennys %>%
 
 There are the most Denny's locations in California.
 
+
+Arranging and counting La Qunitas based on what state they are located in:
+
 ```{r most_locations_states_laquinta}
 laquinta %>%
   count(state) %>%
@@ -107,9 +122,13 @@ laquinta %>%
 
 There are the most La Quinta locations in Texas.
 
-It is a little surprising that they don't have the highest number in the same state, since they are (argued) to always occur together. Other than that, I don't know enough about the different states or stereotypes of the different states to evaluate the specific state further.
+It is a little surprising that they don't have the highest number in the same state, since they are (argued) to always occur together. There might be something else I should have gotten too, but I don't know enough about the different states to catch that.
 
 ### Exercise 10
+
+Guess it makes sense that there are a lot of locations in Texas and California because they are bigger states.
+
+Calculating number of Denny's locations per state based on population numbers:
 
 ```{r loc_per_mile_dennys}
 dennys %>%
@@ -123,6 +142,7 @@ We used inner join here as it found each row that matched (the US states) and ke
 
 There are the most locations of Denny's per thousand square miles in the District of Columbia. I didn't even know that that was a state.
 
+Calculating number of La Quinta locations per state based on population numbers:
 
 ```{r loc_per_mile_laquinta}
 laquinta %>%
@@ -137,6 +157,8 @@ There are the most of La Quinta locations per thousand square miles in Rhode Isl
 
 ### Exercise 11
 
+Adding a variable for the type of establishement to both data sets:
+
 ```{r type_var}
 dennys <- dennys %>%
   mutate(establishment = "Denny's")
@@ -144,9 +166,15 @@ laquinta <- laquinta %>%
   mutate(establishment = "La Quinta")
 ```
 
+
+Combined the data frames for the Denny's and La Quinta data:
+
 ```{r added}
 dn_lq <- bind_rows(dennys, laquinta)
 ```
+
+
+Plotting the locations of the establishments in the US:
 
 ```{r scatterplot_map}
 ggplot(dn_lq, mapping = aes(
@@ -154,8 +182,12 @@ ggplot(dn_lq, mapping = aes(
   y = latitude,
   color = establishment
 )) +
-  geom_point()
+  geom_point() +
+  theme_minimal()
 ```
+
+
+Plotting the locations of the establishments in North Carolina:
 
 ```{r scatter_plot_NC}
 dn_lq %>% 
@@ -165,19 +197,22 @@ dn_lq %>%
     y = latitude,
     color = establishment
   )) +
-    geom_point(alpha = 0.25) +
+    geom_point(alpha = 0.30) +
   labs(
     title = "Geographical Locations of Denny's and La Quintas in North Carolina",
     color = "Establishment",
     x = "Longitude",
     y = "Latitude"
-  )
+  ) + 
+  theme_minimal()
 ```
 
 The joke doesn't really seem to hold based on the locations in North Carolina, as there are only a few locations at the same place.
 
 
 ### Exercise 12
+
+Plotting the location of the establishments in Texas:
 
 ```{r scatter_plot_TX}
 dn_lq %>% 
@@ -187,13 +222,14 @@ dn_lq %>%
     y = latitude,
     color = establishment
   )) +
-    geom_point(alpha = 0.25) +
+    geom_point(alpha = 0.275) +
   labs(
     title = "Geographical Locations of Denny's and La Quintas in Texas",
     color = "Establishment",
     x = "Longitude",
     y = "Latitude"
-  )
+  ) +
+  theme_minimal()
 ```
 
 The claim seems more supported in Texas, as there are clusters with these locations, where several of them seem to overlap (i.e. being in the same location).
