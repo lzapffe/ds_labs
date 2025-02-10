@@ -240,11 +240,38 @@ and harvested for each country in the bar graph. I will make that
 version of the plot too.
 
 ``` r
-# You need to make it long from wide by using pivot before trying to make the stacked bar graph.
+# Make a new data set that is long instead of wide to make the capture and aquaculture variables one variable that can be stacked by
+fisheries_top_10_long <- fisheries_top_10 %>%
+  pivot_longer(cols = c(capture, aquaculture), names_to = "type", values_to = "tons_fish")
+
+# Creating the stacked bar plot
+fisheries_top_10_long %>%
+  # Mutating to make the variable in 100 000s, so that the scale is more readable
+  mutate(tons_fish = tons_fish / 100000) %>%
+  ggplot(aes(x = reorder(country, -total), y = tons_fish, fill = type)) +
+  geom_bar(stat = "identity", position = "stack") +
+  coord_flip() +
+  labs(
+    total = "Total Fish Harvest by Top 10 Countries",
+    x = "Countries",
+    y = "Total Harvest (in 100 000s)"
+  ) +
+  theme_minimal()
 ```
+
+![](lab-06_files/figure-gfm/dist_fish_bar_graph-1.png)<!-- -->
 
 ### Exercise 4
 
-…
+``` r
+data(Whickham)
+```
 
-Add exercise headings as needed.
+#### Question 1
+
+I think the data comes from an observational study, because they are
+looking at smoking and survival rate. It would hard to design an ethical
+study where some people will smoke regularly and others won’t, so it is
+most like observational.
+
+#### Question 2
