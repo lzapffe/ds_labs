@@ -275,3 +275,186 @@ study where some people will smoke regularly and others won’t, so it is
 most like observational.
 
 #### Question 2
+
+There are 1314 observations in the data set. Each observation is a
+participant in the study.
+
+#### Question 3
+
+There are 3 variables in the data set. These are outcome, smoker, age.
+The object type of the columns are: `rsapply(Whickham, class)`.
+
+``` r
+Whickham %>%
+  ggplot(aes(x = outcome, fill = outcome)) +
+  geom_bar() +
+  labs(
+    title = "Survival Rates in the Whickham data set",
+    x = "Outcome",
+    y = "Number of individuals"
+  ) +
+  guides(fill = "none") +
+  theme_minimal()
+```
+
+![](lab-06_files/figure-gfm/plot-outcome-1.png)<!-- -->
+
+``` r
+Whickham %>%
+  ggplot(aes(x = smoker, fill = smoker)) +
+  geom_bar() +
+  labs(
+    title = "Skoming Rates in the Whickham data set",
+    x = "Smoker status",
+    y = "Number of individuals"
+  ) +
+  guides(fill = "none") +
+  theme_minimal()
+```
+
+![](lab-06_files/figure-gfm/plot-smoker-1.png)<!-- -->
+
+``` r
+Whickham %>%
+  ggplot(aes(x = age)) +
+  geom_histogram(fill = "darkblue") +
+  labs(
+    title = "Age for Participants in the Whickham data set",
+    x = "Age",
+    y = "Number of individuals"
+  ) +
+  theme_minimal()
+```
+
+    ## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
+
+![](lab-06_files/figure-gfm/plot-age-1.png)<!-- -->
+
+#### Question 4
+
+I would expect there to be a relationship between smoking and health
+outcome, so that smokers are more likely to not be alive at the time of
+data collection than non-smokers.
+
+#### Question 5
+
+``` r
+Whickham %>%
+  count(smoker, outcome) %>%
+  ggplot(aes(x = outcome, y = n, group = smoker, color = smoker)) +
+  geom_line(linewidth = 1.5) +
+  labs(
+    title = "Survival Status based on Smoking Status",
+    x = "Alive or dead",
+    y = "Number of individuals"
+  ) +
+  theme_minimal()
+```
+
+![](lab-06_files/figure-gfm/plot-rel-1.png)<!-- -->
+
+There doesn’t really seem to be any relationship between smoking and
+survival outcome as the lines are more or less parallel. This is not
+what I was expecting.
+
+``` r
+Whickham %>%
+  count(smoker, outcome) %>%
+  group_by(smoker) %>%
+  mutate(cond_prob = n /sum(n))
+```
+
+    ## # A tibble: 4 × 4
+    ## # Groups:   smoker [2]
+    ##   smoker outcome     n cond_prob
+    ##   <fct>  <fct>   <int>     <dbl>
+    ## 1 No     Alive     502     0.686
+    ## 2 No     Dead      230     0.314
+    ## 3 Yes    Alive     443     0.761
+    ## 4 Yes    Dead      139     0.239
+
+``` r
+# Got some help from ChatGPT to figure out how to use the group_by and mutate to make the new variable without making a function. I apparently don't understand group_by as well as I could.
+```
+
+The probabilities of being alive or dead are also fairly similar based
+on smoking status. It is even slightly more likely for participants that
+were smokers to be alive, than for non-smokers.
+
+### Question 6
+
+Creating a new variable for binned ages:
+
+``` r
+Whickham_df <- Whickham %>%
+  mutate(age_cat = case_when(
+    age <= 44 ~ "18-44",
+    age > 44 & age <= 64 ~ "45-64",
+    age > 64 ~ "65+"
+  ))
+```
+
+### Question 7
+
+Recreating the previous plot faceted by age category:
+
+``` r
+Whickham_df %>%
+  count(smoker, age_cat, outcome) %>%
+  ggplot(aes(x = outcome, y = n, group = smoker, color = smoker)) +
+  geom_line(linewidth = 1.5) +
+  facet_wrap(vars(age_cat)) +
+  labs(
+    title = "Survival Status based on Smoking Status and Age Category",
+    x = "Alive or dead",
+    y = "Number of individuals"
+  ) +
+  theme_minimal()
+```
+
+![](lab-06_files/figure-gfm/plot-by-age-1.png)<!-- -->
+
+Now, you can see that smoking makes it more likely that you will not
+survive in the young age category, from 18-44. At 45-64 years old,
+smoking status doesn’t really matter. While at 65+, smoking makes it
+more likely that you will be alive compared to being a non-smoker.
+
+Calculating conditional probabilities:
+
+``` r
+Whickham_df %>%
+  count(smoker, age_cat, outcome) %>%
+  group_by(smoker, age_cat) %>%
+  mutate(cond_prob = n /sum(n))
+```
+
+    ## # A tibble: 12 × 5
+    ## # Groups:   smoker, age_cat [6]
+    ##    smoker age_cat outcome     n cond_prob
+    ##    <fct>  <chr>   <fct>   <int>     <dbl>
+    ##  1 No     18-44   Alive     327    0.965 
+    ##  2 No     18-44   Dead       12    0.0354
+    ##  3 No     45-64   Alive     147    0.735 
+    ##  4 No     45-64   Dead       53    0.265 
+    ##  5 No     65+     Alive      28    0.145 
+    ##  6 No     65+     Dead      165    0.855 
+    ##  7 Yes    18-44   Alive     270    0.947 
+    ##  8 Yes    18-44   Dead       15    0.0526
+    ##  9 Yes    45-64   Alive     167    0.676 
+    ## 10 Yes    45-64   Dead       80    0.324 
+    ## 11 Yes    65+     Alive       6    0.12  
+    ## 12 Yes    65+     Dead       44    0.88
+
+Looking at this data, I would want to look further into the sample sizes
+per category. There are for example very few participants that are still
+alive in the smoking category, which could influence the results. In
+addition, I would also think that there are other factors (confounds)
+that could influence the relationships we see here. It might be that
+people who are older (65+) and have bad health, stop smoking, so that it
+looks like not smoking makes you more likely to die, when in reality, it
+might just be that people in bad health stop smoking to try to improve
+their health (and at the same time tend to die earlier because of their
+bad health). In this case, there might be a correlation, but not
+causation, between smoking and survival outcome, since there is a third
+variable, health, that effects both of our variables, making it look
+like they affect each other.
