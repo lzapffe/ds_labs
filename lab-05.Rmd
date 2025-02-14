@@ -92,6 +92,7 @@ dn_lq_ak <- dn_lq_ak %>%
 dn_lq_ak_mindist <- dn_lq_ak %>%
   group_by(address.x) %>%
   summarize(closest = min(distance))
+dn_lq_ak_mindist
 ```
 
 
@@ -111,13 +112,14 @@ dn_lq_ak_mindist %>%
   theme_minimal()
 ```
 
-The distances seem to be not too long, the average distance is `r mean(dn_lq_ak_mindist$closest)`km, meaning that it would take on average maybe 5 minutes to drive between the La Quintas and Denny's. However, it is not walking distance.
+The distances between the Denny's and La Quintas in Alaksa seem to be not too long, as the average distance is `r mean(dn_lq_ak_mindist$closest)`km. It would therefore take on average maybe 5 minutes to drive between the La Quintas and Denny's. However, it is not walking distance.
 
 
 ### Exercise 9
 
 Doing this all again, but for North Carolina instead of Alaska:
 
+Filter for locations in North Carolina and join the data frames for the two locations:
 ```{r comb_df_nc}
 dennys_nc <- dennys %>%
   filter(state == "NC")
@@ -131,7 +133,7 @@ dn_lq_nc <- full_join(dennys_nc, laquinta_nc, by = "state")
 dn_lq_nc
 ```
 
-
+Calculating distances between the locations:
 ```{r calc_dist_nc}
 dn_lq_nc <- dn_lq_nc %>%
   mutate(distance = haversine(longitude.x, latitude.x, longitude.y, latitude.y))
@@ -141,6 +143,7 @@ dn_lq_nc_mindist <- dn_lq_nc %>%
   summarize(closest = min(distance))
 ```
 
+Visualizing the smalles distances between Denny's and La Quintas:
 ```{r vis_nc}
 dn_lq_nc_mindist %>%
   ggplot(aes(x = closest)) +
@@ -152,13 +155,14 @@ dn_lq_nc_mindist %>%
   theme_minimal()
 ```
 
-The distances are a lot bigger between the two chains in North Carolina than Alaska. The average distance is `r mean(dn_lq_nc_mindist$closest)` km away from each other, which is a solid drive, maybe closer to 1-2 hours from each other.
+The distances are a lot bigger between the two chains in North Carolina compared to Alaska. The average distance is `r mean(dn_lq_nc_mindist$closest)` km away from each other, which is a solid drive, maybe around to 1-2 hours from each other.
 
 
 ### Exercise 10
 
 Doing this all again, but this time, for Texas:
 
+Filtering for locations in Texas and joining the two data frames:
 ```{r comb_df_tx}
 dennys_tx <- dennys %>%
   filter(state == "TX")
@@ -172,6 +176,7 @@ dn_lq_tx <- full_join(dennys_tx, laquinta_tx, by = "state")
 dn_lq_tx
 ```
 
+Calculate distances between the two locations:
 ```{r calc_dist_tx}
 dn_lq_tx <- dn_lq_tx %>%
   mutate(distance = haversine(longitude.x, latitude.x, longitude.y, latitude.y))
@@ -181,6 +186,7 @@ dn_lq_tx_mindist <- dn_lq_tx %>%
   summarize(closest = min(distance))
 ```
 
+Visualizing the closest distances between Denny's and La Quintas:
 ```{r vis_tx}
 dn_lq_tx_mindist %>%
   ggplot(aes(x = closest)) +
@@ -192,13 +198,14 @@ dn_lq_tx_mindist %>%
   theme_minimal()
 ```
 
-The distances in Texas are a lot smaller again than what it was in North Carolina. There is a little big of range, so there are some locations where the chains are further apart. However, the mean is `r mean(dn_lq_tx_mindist$closest)` km away from each other, which is similar to the average in Alaska, with about a 5 minute drive.
+The distances in Texas are a lot smaller than what it was in North Carolina. There is a little bit of range though, so some locations have the chains further apart from each other. However, the mean is `r mean(dn_lq_tx_mindist$closest)` km away from each other, which is similar to the average in Alaska, with about a 5 minute drive.
 
 
 ### Exercise 11
 
 Doing this all again, this time for New York, where I went for undergrad:
 
+Filtering by New York and joining the two data frames:
 ```{r comb_df_ny}
 dennys_ny <- dennys %>%
   filter(state == "NY")
@@ -212,6 +219,7 @@ dn_lq_ny <- full_join(dennys_ny, laquinta_ny, by = "state")
 dn_lq_ny
 ```
 
+Calculating distances and minimum distance between the two chains:
 ```{r calc_dist_ny}
 dn_lq_ny <- dn_lq_ny %>%
   mutate(distance = haversine(longitude.x, latitude.x, longitude.y, latitude.y))
@@ -221,12 +229,13 @@ dn_lq_ny_mindist <- dn_lq_ny %>%
   summarize(closest = min(distance))
 ```
 
+Visualizing the minimum distance between the two chains:
 ```{r vis_ny}
 dn_lq_ny_mindist %>%
   ggplot(aes(x = closest)) +
   geom_histogram(fill = "darkblue") +
   labs(
-   title = "Smallest Distances Between La Quintas and Denny's in Texas",
+   title = "Smallest Distances Between La Quintas and Denny's in New York",
    x = "Minimum distance between Denny's and La Quintas (km)",
    y = "Number of locations with similar distance") +
   theme_minimal()
@@ -237,5 +246,5 @@ The distances in New York are more spread out than in Texas, but less so than in
 
 ### Exercise 12
 
-Based on these analyses, it seems like whether Mitch Hedberg's joke is accurate depends on what state you are in. For some states, like Alaska and Texas, it seems pretty accurate, but for others, like North Carolina, it seems to not be very accurate.
+Based on these analyses, it seems like whether Mitch Hedberg's joke is accurate or not depends on what state you are in. For some states, like Alaska and Texas, it seems pretty accurate, but for others, like North Carolina, it seems to not be very accurate.
 
