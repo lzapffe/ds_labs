@@ -37,6 +37,11 @@ staff <- read_csv("data/instructional-staff.csv")
     ## ℹ Use `spec()` to retrieve the full column specification for this data.
     ## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
 
+There will be 5\*11=55 rows in the long format, as each combination of
+year and hire type will have its own row.
+
+Wide to long conversion of data set:
+
 ``` r
 staff_long <- staff %>%
   pivot_longer(cols = -faculty_type, names_to = "year") %>%
@@ -60,7 +65,7 @@ staff_long
     ## 10 Full-Time Tenured Faculty 2009   16.8
     ## # ℹ 45 more rows
 
-Line graph of the data set:
+Standard line graph of the data set:
 
 ``` r
 staff_long %>%
@@ -70,18 +75,36 @@ staff_long %>%
     group = faculty_type,
     color = faculty_type
   )) +
-  geom_line()
+  geom_line() +
+  labs(
+    title = "Percentage of Hires per Faculty Type over Time",
+    x = "Year",
+    y = "Proportion of hires",
+    color = "Faculty type"
+  )
 ```
 
 ![](lab-06_files/figure-gfm/standard_line_plot-1.png)<!-- -->
 
 ### Exercise 2
 
-Improving the above plot:
+Steps to improve the above plot:
 
-I tried first doing this without additional libraries. After getting
-labels that overlapped, I gave up and used the library ggrepel. That
-seems easier than to start adjusting labels individually.
+I am trying to highlight that there are more part-time faculty, and
+fewer full-time faculty. Therefore, I chose to color the part-time
+faculty as being red, to draw the viewer’s attention there. I colored
+all the full-time positions as blue, because the distinction doesn’t
+matter that much in this case and left graduate student employees grey
+as that is not as important (and stays fairly constant). I could also
+have collapsed the data for all full-time faculty to give the viewer
+less components to focus on, but I think I like having all the different
+types, at it seems like more evidence telling the same story.
+
+I tried doing this without additional libraries for data visualization
+(based on what the lab calls for). Howver, after getting labels that
+overlapped, I gave up and used the library ggrepel. It offers repel
+functions for labels that are quicker to use than to adjust the position
+of each label individually.
 
 ``` r
 staff_long %>%
@@ -112,13 +135,7 @@ staff_long %>%
 
 ![](lab-06_files/figure-gfm/staff_line_graph-1.png)<!-- -->
 
-I am trying to highlight that there are more part-time faculty, and
-fewer full-time faculty. Therefore, I chose to color the part-time
-faculty as being red, to draw the viewer’s attention there. I colored
-all the full-time positions as blue, because the distinction doesn’t
-matter that much in this case and left graduate student employees grey
-as that is not as important. I could also have collapsed the data for
-all full-time faculty and removed that for part-time faculty.
+## Fisheries
 
 ### Exercise 3
 
@@ -126,14 +143,14 @@ Here are some thoughts about how to improve the Fisheries plot:
 
 - Not using 3D for the plots, because it is distracting and harder to
   interpret (area vs surface)
-- Not use pie charts, but instead bar charts, because we are better at
+- Not use pie charts, but instead bar charts, as humans are better at
   interpreting surface than area
 - Maybe change the scale of the y-axis of the filled-line plot, since I
-  can’t see anything for most of the countries, since China is an
-  extreme outlier. Alternatively, zoom in on the data with smaller
-  values in China isn’t that important.
-- Remove the background color for the pie charts, makes it harder to see
-  contrast
+  can’t see anything for most of the countries, as China is an extreme
+  outlier. Alternatively, zoom in on the data with smaller values if
+  China isn’t that important.
+- Remove the background color for the pie charts, which makes it harder
+  to see contrast
 - Add a legend to the filled-line graph. I don’t know what the two
   colors mean
 - Add titles to the graphs
@@ -145,15 +162,14 @@ Here are some thoughts about how to improve the Fisheries plot:
   of having a legend.
 - It is a little hard to know exactly what the graphs show, since it
   isn’t explained well. However, it seems like the filled-line graph and
-  pie chart is showing the same information, which seems unnecessary. I
-  might make both, but I would think only one of them would be needed.
+  pie chart is showing the same information, which seems unnecessary.
+  Only one graph should be needed.
 - I would also test out flipping the axes for the filled-line graph,
   since it is a little hard to read the country names when they are
   tilted.
-- Not have more colored area that countries. The pie charts have 6
-  countries, but maybe 30 different sections. Are the country data
-  divided into several categories? In that case, it should be collapsed
-  into just one data point per country.
+- Lastly, I would not have more colored area that countries. The pie
+  charts have 6 countries, but maybe 30 different sections. That isn’t
+  clear.
 
 ``` r
 fisheries <- read_csv("data/fisheries.csv")
@@ -171,6 +187,14 @@ fisheries <- read_csv("data/fisheries.csv")
 Looking at the data, there are way to many countries to graph.
 Therefore, I will try seeing what the top countries are based on total
 fishery production:
+
+Note: I realized that it says in the text that it only shows countries
+with a total harvest of 100,000 tons of fish or more. I like the top 10
+approach, so I will stick with that. However, it could have reasonably
+be the countries with at least 100,000 tons of fish harvested.
+
+Arranging the data to get the top 10 countries in terms of total
+harvesting:
 
 ``` r
 fisheries %>%
@@ -195,6 +219,8 @@ fisheries %>%
 I think top 10 countries might be good. There might be political reasons
 to include other specific countries, but I don’t have any of those, so I
 will stick with top 10.
+
+Filter by top 10 countries and save it in another data frame:
 
 ``` r
 fisheries_top_10 <- fisheries %>%
@@ -227,7 +253,8 @@ fisheries_top_10 %>%
   labs(
     total = "Total Fish Harvest by Top 10 Countries",
     x = "Countries",
-    y = "Total Harvest (in 100 000s)"
+    y = "Total Harvest (in 100 000s)",
+    caption = "Data from: United Nations (FAO)"
   ) +
   guides(fill = "none") +
   theme_minimal()
@@ -237,7 +264,7 @@ fisheries_top_10 %>%
 
 It could also be interesting to see the distribution of fish captures
 and harvested for each country in the bar graph. I will make that
-version of the plot too.
+version of the plot too:
 
 ``` r
 # Make a new data set that is long instead of wide to make the capture and aquaculture variables one variable that can be stacked by
@@ -246,6 +273,10 @@ fisheries_top_10_long <- fisheries_top_10 %>%
 
 # Creating the stacked bar plot
 fisheries_top_10_long %>%
+  mutate(type = case_when(
+    type == "capture" ~ "Capture",
+    type == "aquaculture" ~ "Aquaculture"
+  )) %>%
   # Mutating to make the variable in 100 000s, so that the scale is more readable
   mutate(tons_fish = tons_fish / 100000) %>%
   ggplot(aes(x = reorder(country, -total), y = tons_fish, fill = type)) +
@@ -254,14 +285,22 @@ fisheries_top_10_long %>%
   labs(
     total = "Total Fish Harvest by Top 10 Countries",
     x = "Countries",
-    y = "Total Harvest (in 100 000s)"
+    y = "Total Harvest (in 100 000s)",
+    fill = "Type of Harvest",
+    caption = "Data from: United Nations (FAO)"
   ) +
   theme_minimal()
 ```
 
 ![](lab-06_files/figure-gfm/dist_fish_bar_graph-1.png)<!-- -->
 
+I made all the changes I discussed earlier.
+
+## Smokers in Whickham
+
 ### Exercise 4
+
+Load the Whickham data:
 
 ``` r
 data(Whickham)
@@ -269,10 +308,11 @@ data(Whickham)
 
 #### Question 1
 
-I think the data comes from an observational study, because they are
-looking at smoking and survival rate. It would hard to design an ethical
-study where some people will smoke regularly and others won’t, so it is
-most like observational.
+I think the data comes from an observational study, as they are looking
+at smoking and survival rate. It would hard to design an ethical study
+where some people will smoke regularly and others won’t, which is what
+would be required for it to be experimental. Therefore, it is more
+likely observational.
 
 #### Question 2
 
@@ -283,6 +323,8 @@ participant in the study.
 
 There are 3 variables in the data set. These are outcome, smoker, age.
 The object type of the columns are: `rsapply(Whickham, class)`.
+
+Plot outcome variable:
 
 ``` r
 Whickham %>%
@@ -299,12 +341,14 @@ Whickham %>%
 
 ![](lab-06_files/figure-gfm/plot-outcome-1.png)<!-- -->
 
+Plotting smoking status variable:
+
 ``` r
 Whickham %>%
   ggplot(aes(x = smoker, fill = smoker)) +
   geom_bar() +
   labs(
-    title = "Skoming Rates in the Whickham data set",
+    title = "Smoking Rates in the Whickham data set",
     x = "Smoker status",
     y = "Number of individuals"
   ) +
@@ -313,6 +357,8 @@ Whickham %>%
 ```
 
 ![](lab-06_files/figure-gfm/plot-smoker-1.png)<!-- -->
+
+Plotting age variable:
 
 ``` r
 Whickham %>%
@@ -332,11 +378,13 @@ Whickham %>%
 
 #### Question 4
 
-I would expect there to be a relationship between smoking and health
-outcome, so that smokers are more likely to not be alive at the time of
-data collection than non-smokers.
+I would expect the relationship between smoking and health outcome to be
+so that smokers are more likely to be deceased at the time of data
+collection than non-smokers.
 
 #### Question 5
+
+Visualizing relationship between smoking status and outcome:
 
 ``` r
 Whickham %>%
@@ -346,7 +394,8 @@ Whickham %>%
   labs(
     title = "Survival Status based on Smoking Status",
     x = "Alive or dead",
-    y = "Number of individuals"
+    y = "Number of individuals",
+    color = "Smoking status"
   ) +
   theme_minimal()
 ```
@@ -356,6 +405,8 @@ Whickham %>%
 There doesn’t really seem to be any relationship between smoking and
 survival outcome as the lines are more or less parallel. This is not
 what I was expecting.
+
+Calculating condition probabilities for survival stutus:
 
 ``` r
 Whickham %>%
@@ -377,13 +428,14 @@ Whickham %>%
 # Got some help from ChatGPT to figure out how to use the group_by and mutate to make the new variable without making a function. I apparently don't understand group_by as well as I could.
 ```
 
-The probabilities of being alive or dead are also fairly similar based
-on smoking status. It is even slightly more likely for participants that
-were smokers to be alive, than for non-smokers.
+The probabilities of being alive or dead show a similar relationship as
+the graph: the likelihood of being alive or deceased is fairly similar
+regardless of smoking status. It is even slightly more likely for
+participants that were smokers to be alive, than for non-smokers.
 
 ### Question 6
 
-Creating a new variable for binned ages:
+Creating a new variable with ages categories:
 
 ``` r
 Whickham_df <- Whickham %>%
@@ -392,7 +444,16 @@ Whickham_df <- Whickham %>%
     age > 44 & age <= 64 ~ "45-64",
     age > 64 ~ "65+"
   ))
+head(Whickham_df)
 ```
+
+    ##   outcome smoker age age_cat
+    ## 1   Alive    Yes  23   18-44
+    ## 2   Alive    Yes  18   18-44
+    ## 3    Dead    Yes  71     65+
+    ## 4   Alive     No  67     65+
+    ## 5   Alive     No  64   45-64
+    ## 6   Alive    Yes  38   18-44
 
 ### Question 7
 
@@ -407,17 +468,20 @@ Whickham_df %>%
   labs(
     title = "Survival Status based on Smoking Status and Age Category",
     x = "Alive or dead",
-    y = "Number of individuals"
+    y = "Number of individuals",
+    color = "Smoking status"
   ) +
   theme_minimal()
 ```
 
 ![](lab-06_files/figure-gfm/plot-by-age-1.png)<!-- -->
 
-Now, you can see that smoking makes it more likely that you will not
-survive in the young age category, from 18-44. At 45-64 years old,
-smoking status doesn’t really matter. While at 65+, smoking makes it
-more likely that you will be alive compared to being a non-smoker.
+Now, you can see that the relationship between smoking and survival
+outcome looks different for different age categories. For example,
+smoking makes it more likely that you will not survive in the young age
+category, from 18-44. At 45-64 years old, smoking status doesn’t really
+matter. While at 65+, smoking makes it more likely that you will be
+alive compared to if you were a non-smoker.
 
 Calculating conditional probabilities:
 
@@ -445,6 +509,9 @@ Whickham_df %>%
     ## 11 Yes    65+     Alive       6    0.12  
     ## 12 Yes    65+     Dead       44    0.88
 
+The conditional probabilities show a similar relationship based on age
+as the plot.
+
 Looking at this data, I would want to look further into the sample sizes
 per category. There are for example very few participants that are still
 alive in the smoking category, which could influence the results. In
@@ -454,7 +521,7 @@ people who are older (65+) and have bad health, stop smoking, so that it
 looks like not smoking makes you more likely to die, when in reality, it
 might just be that people in bad health stop smoking to try to improve
 their health (and at the same time tend to die earlier because of their
-bad health). In this case, there might be a correlation, but not
-causation, between smoking and survival outcome, since there is a third
+bad health). In this case, there might be a correlation between smoking
+status and survival outcome, but not causation, as there is a third
 variable, health, that effects both of our variables, making it look
 like they affect each other.
