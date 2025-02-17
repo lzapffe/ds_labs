@@ -72,8 +72,16 @@ df <- tribble(
 Creating a more appropriate visualization:
 ```{r plot}
 df %>%
-  ggplot(aes(x = date, y = cases, group = mask, color = mask, group = 1)) +
+  mutate(mask = case_when(
+    mask == "mask" ~ "Mask",
+    mask == "no mask" ~ "No mask"
+  )) %>%
+  # The graph looks all weird (and misleading) because the dates aren't ordered correctly. Added arrange to change the order of the dates in the graph
+  arrange(dmy(date)) %>%
+  # The data kept being reorganized by ggplot automatically, so the fct_inorder() function from forcats tells ggplot to not reorder it
+  ggplot(aes(x = fct_inorder(date), y = cases, group = mask, color = mask, group = 1)) +
   geom_line(linewidth = 1.5) +
+  ylim(0, 30) +
   theme_minimal() +
   labs(
     title = "Number of Cases (per 100 000 population) of Covid-19 Based on Mask Mandates",
@@ -94,5 +102,129 @@ From the graph, it seems like wearing a mask leads to more covid cases, which se
 
 
 ## Exericse 5
+The visualization I made is in my opinion more accurate, since it has the same scale for both the mask and no mask counties. You can therefore easily compare the number of cases with and without a mask mandate. I also had the scale run from 0, so that you can easily compare proportions, which is harder to do with a scale that starts at a different number than 0. Lastly, it is a line graph to show the progression over time. 
+
+## Exercise 6
+I want to make a visualization that communicates that it is even more effective with masks, than what the current visualization shows. To do this, I will pull off a trick that I learned from FOX news: to change the distance between the data points on the x-axis to get the shape I want for the graph. I will do this by dropping a lot of the dates that don't show a rapid decrease:
+```{r mask-effective-plot}
+df %>%
+  mutate(mask = case_when(
+    mask == "mask" ~ "Mask",
+    mask == "no mask" ~ "No mask"
+  )) %>%
+  filter(date %in% c("12/7/2020", "13/7/2020", "3/8/2020")) %>%
+  arrange(dmy(date)) %>%
+  ggplot(aes(x = fct_inorder(date), y = cases, group = mask, color = mask, group = 1)) +
+  geom_line(linewidth = 1.5) +
+  ylim(0, 30) +
+  theme_minimal() +
+  labs(
+    title = "Number of Cases (per 100 000 population) of Covid-19 Based on Mask Mandates",
+    subtitle = "Making it look like mask mandates are even more effective",
+    x = "Dates",
+    y = "Number of cases",
+    color = "Mask mandate"
+  ) +
+  theme(axis.text.x = element_text(angle = 45))
+```
+
+Now, it looks like mask mandates are highly effective in decreasing number of cases.
 
 
+### Masks are not effective
+
+Now, I will use the same tactic to make it look like mask mandates are not effective at all:
+```{r mask-ineffective-plot}
+df %>%
+  mutate(mask = case_when(
+    mask == "mask" ~ "Mask",
+    mask == "no mask" ~ "No mask"
+  )) %>%
+  filter(date %in% c("15/7/2020", "16/7/2020", "17/7/2020", "18/7/2020", "19/7/2020", "20/7/2020", "21/7/2020", "22/7/2020", "23/7/2020")) %>%
+  arrange(dmy(date)) %>%
+  ggplot(aes(x = fct_inorder(date), y = cases, group = mask, color = mask, group = 1)) +
+  geom_line(linewidth = 1.5) +
+  ylim(0, 30) +
+  theme_minimal() +
+  labs(
+    title = "Number of Cases (per 100 000 population) of Covid-19 Based on Mask Mandates",
+    subtitle = "Making it look like mask mandates are not effective",
+    x = "Dates",
+    y = "Number of cases",
+    color = "Mask mandate"
+  ) +
+  theme(axis.text.x = element_text(angle = 45))
+```
+
+Now, mask mandates seem to not be the slightest helpful.
+
+### Masks are bad
+Now, we can play around and make it look like masks actually increases covid cases:
+```{r mask-bad-plot}
+df %>%
+  mutate(mask = case_when(
+    mask == "mask" ~ "Mask",
+    mask == "no mask" ~ "No mask"
+  )) %>%
+  filter(date %in% c("16/7/2020", "17/7/2020", "18/7/2020", "19/7/2020", "20/7/2020")) %>%
+  arrange(dmy(date)) %>%
+  ggplot(aes(x = fct_inorder(date), y = cases, group = mask, color = mask, group = 1)) +
+  geom_line(linewidth = 1.5) +
+  ylim(0, 30) +
+  theme_minimal() +
+  labs(
+    title = "Number of Cases (per 100 000 population) of Covid-19 Based on Mask Mandates",
+    subtitle = "Making it look like mask mandates are damaging",
+    x = "Dates",
+    y = "Number of cases",
+    color = "Mask mandate"
+  ) +
+  theme(axis.text.x = element_text(angle = 45))
+```
+
+This message can also easily be conveyed with a bar graph, that only takes the mean into account, not the development over time:
+```{r mask-bad-bar-plot}
+df %>%
+  mutate(mask = case_when(
+    mask == "mask" ~ "Mask",
+    mask == "no mask" ~ "No mask"
+  )) %>%
+  ggplot(aes(x = mask, y = cases, fill = mask)) +
+  geom_bar(stat = 'summary', fun = "mean") +
+  theme_minimal() +
+  labs(
+    title = "Number of Cases (per 100 000 population) of Covid-19 Based on Mask Mandates",
+    subtitle = "Making it look like mask mandates are bad",
+    x = "Dates",
+    y = "Number of cases",
+    fill = "Mask mandate"
+  )
+```
+
+### Mask-mandate counties have lower cases of covid
+
+What about switching the y-axis. Why have it start at 0 and go to 30, when we can have it go from 30 to 0?
+
+```{r invert-y-axis-plot}
+df %>%
+  mutate(mask = case_when(
+    mask == "mask" ~ "Mask",
+    mask == "no mask" ~ "No mask"
+  )) %>%
+  # The graph looks all weird (and misleading) because the dates aren't ordered correctly. Added arrange to change the order of the dates in the graph
+  arrange(dmy(date)) %>%
+  # The data kept being reorganized by ggplot automatically, so the fct_inorder() function from forcats tells ggplot to not reorder it
+  ggplot(aes(x = fct_inorder(date), y = cases, group = mask, color = mask, group = 1)) +
+  geom_line(linewidth = 1.5) +
+  scale_y_reverse(limits = c(30, 0)) +
+  theme_minimal() +
+  labs(
+    title = "Number of Cases (per 100 000 population) of Covid-19 Based on Mask Mandates",
+    x = "Dates",
+    y = "Number of cases",
+    color = "Mask mandate"
+  ) +
+  theme(axis.text.x = element_text(angle = 45))
+```
+
+Now, the plot is more accurate based on my initial hypothesis. There are a lot fewer cases of Covid with mask mandates than without.
