@@ -15,16 +15,145 @@ library(openintro)
 
 ### Exercise 1
 
-Remove this text, and add your answer for Exercise 1 here.
-Add code chunks as needed.
-Don't forget to label your code chunk.
-Do not use spaces in code chunk labels.
+Plotting the distribution of the professor ratings:
+```{r plot-score-dist}
+evals %>% 
+  ggplot(aes(x = score)) +
+  geom_histogram(fill = "blue") +
+  labs(
+    title = "Distribution of Scores for Professor Evaluations",
+    x = "Score",
+    y = "Frequency"
+  ) +
+  xlim(0, 5)
+
+```
+
+The distribution is negatively skewed. That means that most students rate their professors positively. I didn't expect it to be that high, but it makes sense that it is not equally distributed across all scores, as the university hopefully hire professors that are relatively good at their job. In addition, if they do like WF and have students give feedback on paper in a small class, so that it would be very easy for professors to identify what score is from whom, students might feel pressured to give higher ratings to not damage their relationship with the professor.
 
 ### Exercise 2
 
-...
+Plotting the relationship between professor ratings and their beauty score:
+```{r plot-score-beauty}
+evals %>% 
+  ggplot(aes(x = score, y = bty_avg)) +
+  geom_point( color = "blue") +
+  labs(
+    title = "Relationship Between the Professor Evaluations and their Beauty Score",
+    x = "Score",
+    y = "Beauty Score"
+  ) +
+  xlim(0, 5) +
+  ylim(0, 10)
+```
 
-Add exercise headings as needed.
+### Exercise 3
+
+Plotting the relationship between professor ratings and their beauty score, with jitter:
+```{r plot-score-beauty-jitter}
+evals %>% 
+  ggplot(aes(x = score, y = bty_avg)) +
+  geom_jitter(color = "blue") +
+  labs(
+    title = "Relationship Between the Professor Evaluations and their Beauty Score - with Jitter",
+    x = "Score",
+    y = "Beauty Score"
+  ) +
+  xlim(0, 5) + 
+  ylim(0, 10)
+```
+
+Figured out that using both geom_point and geom_jitter doesn't work very well, because it essentially duplicates all the data and shows twice as many data points as are actually in the data set.
+
+Jitter adds a little bit of random noise to our data set, so that data points with the same value will be slightly different. This is beneficial for plotting because it won't show the data points as being on top of each other (looking like there is only one), but will instead make them clustered around the original value, showing the number of data points around that value accurately. With jitter, you can now see that there are a lot of data points around the beauty scores of 2.5 < x < 5, which wasn't clear in the graph without jittering.
+
+
+### Exercise 4
+
+Fitting a linear model between professor rating and beauty score:
+```{r reg-rating-beauty}
+model <- lm(score ~ bty_avg, data = evals)
+model
+```
+
+y = 3.88 + 0.067x, where x is professor ratings and y is the beauty score
+
+
+### Exercise 5
+
+Plotting the relationship between professor ratings and their beauty score, with jitter and a regression line:
+```{r plot-score-beauty-jitter-regression}
+evals %>% 
+  ggplot(aes(x = score, y = bty_avg)) +
+  geom_jitter(color = "blue") +
+  geom_smooth(method = "lm", se = FALSE, linewidth = 1.25, color = "orange") +
+  labs(
+    title = "Relationship Between the Professor Evaluations and their Beauty Score - with Jitter and a Regression Line",
+    x = "Score",
+    y = "Beauty Score"
+  ) +
+  xlim(0, 5) + 
+  ylim(0, 10)
+```
+
+
+### Exercise 6
+
+The professor ratings (from 0 to 5) will increase by 0.067 points per beauty point (0-10): Professor ratings therefore seem to be affected by beauty points, but it is far from the only facotr affecting them. You can for example not get more of a boost than 0.67 points in the score from beauty points.
+
+
+### Exercise 7
+
+The intercept of the model is 3.88, meaning that a professor with a beauty rating of 0 will likely get a professor rating of 3.88. 
+
+
+### Exercise 8
+
+Getting the R^2 of our model:
+```{r get-r-squared}
+summary(model)
+```
+
+The R^2 of the model is 0.035, with an adjusted R^2 of 0.033. That means that beauty scores explain 3.5% of the variance in professor ratings, which is not a lot.
+
+
+### Exercise 9
+
+Fitting a linear model between professor rating and the gender of the professor:
+```{r reg-rating-gender}
+m_gen <- lm(score ~ gender, data = evals)
+m_gen
+```
+
+y = 4.09 + 0.14x
+
+The x variable is whether the professor is male. Therefore, the intercept is the rating of female professors, that are 4.09. If the professor is instead male, they get an additional 0.14 points in their rating. This is a little boost, but not a whole lot considering that the ratings range from 0 to 5. It is however interesting to note that this is equivalent to the rating increase from being 2 points higher on beauty ratings.
+
+
+### Exercise 10
+
+Male professor: 4.09 + 0.14
+Female professor: 4.09
+
+
+### Exercise 11
+
+Fitting a linear model between professor rating and the rank of the professor:
+```{r reg-rating-rank}
+m_rank <- lm(score ~ rank, data = evals)
+m_rank
+```
+According to ?evals, there are 3 types of ranks: teaching, tenure track, tenured
+
+y = 4.28 - 0.13x(tenure track) - 0.15x(tenured)
+
+The initial rating (which corresponds to that of professors just teaching), is 4.28. Then, if the professor is instead tenure track, they get a decrease in their score of 0.12 points, or if they are tenured, they get a decrease in their score of 0.14.
+
+
+### Exercise 11
+
+
+
 
 ## 
 For Exercise 12, relevel() function can be helpful! 

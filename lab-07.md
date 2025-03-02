@@ -9,6 +9,16 @@ Linn Zapffe
 library(tidyverse) 
 ```
 
+    ## Warning: package 'ggplot2' was built under R version 4.3.3
+
+    ## Warning: package 'tidyr' was built under R version 4.3.3
+
+    ## Warning: package 'readr' was built under R version 4.3.3
+
+    ## Warning: package 'purrr' was built under R version 4.3.3
+
+    ## Warning: package 'lubridate' was built under R version 4.3.3
+
 ### Exercise 1
 
 Making a tibble with made-up data to play around with for
@@ -99,20 +109,26 @@ df %>%
 ## Exercise 3
 
 There are a lot more cases of Covid in counties with a mask mandate than
-without. The last visualization had two different scales for the two
+without. The original visualization had two different scales for the two
 groups, making it seem like there was more cases in counties with masks
 initially, but that it dropped down to levels lower than in counties
 with no mask mandate after a week or so. That wasn’t the case. As you
 can see in this visualization, there are a lot fewer cases in counties
-with no mask mandate.
+with no mask mandate, even though there is a slight drop in cases in
+counties with a mask mandate over time.
 
 ## Exercise 4
 
 From the graph, it seems like wearing a mask leads to more covid cases,
 which seems a little weird, but there are some ways it could make sense.
 For example, maybe these counties have more open rules around social
-gatherings that the no mask counties, since they think masks will delay
-the spread.
+gatherings than the no mask counties, since they think masks will delay
+the spread. This could in turn lead to more covid cases. It could also
+be that counties with the mask mandate had more cases to begin with,
+which is why they are enforcing a mask mandate. The data is just
+observational and not experimental, so it is hard to say anything for
+sure about the cause and effect between wearing a mask and covid cases
+from it.
 
 ## Exericse 5
 
@@ -120,18 +136,23 @@ The visualization I made is in my opinion more accurate, since it has
 the same scale for both the mask and no mask counties. You can therefore
 easily compare the number of cases with and without a mask mandate. I
 also had the scale run from 0, so that you can easily compare
-proportions, which is harder to do with a scale that starts at a
-different number than 0. Lastly, it is a line graph to show the
-progression over time.
+proportions, which is harder to do with a scale that starts at another
+number than 0. Lastly, it is a line graph to show the progression over
+time.
 
 ## Exercise 6
 
-I want to make a visualization that communicates that it is even more
-effective with masks, than what the current visualization shows. To do
-this, I will pull off a trick that I learned from FOX news: to change
-the distance between the data points on the x-axis to get the shape I
-want for the graph. I will do this by dropping a lot of the dates that
-don’t show a rapid decrease:
+I want to make a visualization that communicates that masks are more
+effective than what the original data showed. This could then for
+example support my theory that counties with mask mandates got the mask
+mandates because they had more cases to begin with. You can see little
+decrease in cases in counties with mask mandates, but masks could be
+shown to be effective if the cases decreased steadily in the counties
+with a mask mandate. To do this, I will pull off a trick that I learned
+from FOX news: to change the distance between the data points on the
+x-axis to get the shape I want for the graph. I will do this by dropping
+some of the dates that don’t show a rapid decrease in cases for counties
+with a mask mandate:
 
 ``` r
 df %>%
@@ -159,13 +180,15 @@ df %>%
 
 ![](lab-07_files/figure-gfm/mask-effective-plot-1.png)<!-- -->
 
-Now, it looks like mask mandates are highly effective in decreasing
-number of cases.
+Now, it looks like mask mandates are highly effective for decreasing
+number of covid cases. The x-axis is manipulated to show this by
+changing the interval between the x-axes points to get the solid and
+rapid decrease I wanted to show.
 
 ### Masks are not effective
 
-Now, I will use the same tactic to make it look like mask mandates are
-not effective at all:
+Now, I will flip it, by using the same tactic as in the previous graph
+to make it look like mask mandates are not effective at all:
 
 ``` r
 df %>%
@@ -193,12 +216,13 @@ df %>%
 
 ![](lab-07_files/figure-gfm/mask-ineffective-plot-1.png)<!-- -->
 
-Now, mask mandates seem to not be the slightest helpful.
+Now, mask mandates seem to not have any effect on the number of covid
+cases.
 
 ### Masks are bad
 
-Now, we can play around and make it look like masks actually increases
-covid cases:
+We can also play around with the same strategy and make it look like
+masks actually increases covid cases:
 
 ``` r
 df %>%
@@ -227,7 +251,7 @@ df %>%
 ![](lab-07_files/figure-gfm/mask-bad-plot-1.png)<!-- -->
 
 This message can also easily be conveyed with a bar graph, that only
-takes the mean into account, not the development over time:
+takes the mean, and not the development over time, into account:
 
 ``` r
 df %>%
@@ -252,7 +276,8 @@ df %>%
 ### Mask-mandate counties have lower cases of covid
 
 What about switching the y-axis. Why have it start at 0 and go to 30,
-when we can have it go from 30 to 0?
+when we can have it go from 30 to 0? This will make it look like mask
+mandates are highly effective and leads to lower covid cases.
 
 ``` r
 df %>%
@@ -280,5 +305,7 @@ df %>%
 
 ![](lab-07_files/figure-gfm/invert-y-axis-plot-1.png)<!-- -->
 
-Now, the plot is more accurate based on my initial hypothesis. There are
-a lot fewer cases of Covid with mask mandates than without.
+Now, the plot is conveying my initial hypothesis: that there are fewer
+cases of Covid with mask mandates than without. It is however not very
+ethical to play around with data visualization to convey your opinions,
+so I will stick to more truthful visualizations from now.

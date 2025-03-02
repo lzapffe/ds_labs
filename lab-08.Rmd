@@ -1,16 +1,29 @@
 ---
 title: "Lab 08 - University of Edinburgh Art Collection"
-author: "Insert your name here"
-date: "Insert date here"
+author: "Linn Zapffe"
+date: "21/02/2025"
 output: github_document
 ---
 
 ### Load packages and data
 
 ```{r load-packages, message = FALSE}
+# Library for plots, data handling, and web scraping
 library(tidyverse) 
 library(skimr)
+# Library to check access to the web page URL through web scraping
+library(robotstxt)
 ```
+
+Checking that we have access to web scrape from the web page with the data:
+```{r path-permission}
+paths_allowed("https://collections.ed.ac.uk/art)")
+```
+
+As seen, we have access to web scrape from the web page, so we can move forward with out project.
+
+
+
 
 ```{r load-data, message = FALSE, eval = FALSE}
 # Remove eval = FALSE or set it to TRUE once data is ready to be loaded
