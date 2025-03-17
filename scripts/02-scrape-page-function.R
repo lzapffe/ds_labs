@@ -22,7 +22,8 @@ scrape_page <- function(url) {
   
   # Scraping the artist names from the web page
   artist_vect <- page %>%
-    html_nodes(".artist") %>%
+    html_nodes(".iteminfo") %>%
+    html_node(".artist") %>%
     html_text()
   
   # Organizing everything as a tibble

@@ -1,7 +1,7 @@
 ---
 title: "Lab 09 - Grading the professor, Pt. 1"
-author: "Insert your name here"
-date: "Insert date here"
+author: "Linn Zapffe"
+date: "03/03/2025"
 output: github_document
 ---
 
@@ -150,10 +150,47 @@ y = 4.28 - 0.13x(tenure track) - 0.15x(tenured)
 The initial rating (which corresponds to that of professors just teaching), is 4.28. Then, if the professor is instead tenure track, they get a decrease in their score of 0.12 points, or if they are tenured, they get a decrease in their score of 0.14.
 
 
-### Exercise 11
+### Exercise 12
+Creating a factor variable for rank and make tenure track the baseline:
+```{r make-rank-relevel}
+evals_df <- evals %>% 
+  mutate(rank_relevel = factor(rank, levels = c("tenure track", "tenured", "teaching")))
+```
 
 
+## Exercise 13
+Fitting regression with new ordering for rank:
+```{r reg-rank-relevel}
+m_rank_relevel <- lm(score ~ rank_relevel, data = evals_df)
+summary(m_rank_relevel)
+```
+y = 4.15 - 0.02x(tenured) + 0.13x(teaching)
+
+The initial rating (which corresponds to that of tenured professors), is 4.15. Then, if the professor is instead tenured, they get a decrease in their score of 0.02 points, or if they are just teaching, they get an increase in their score of 0.13.
+
+The adjusted R^2 is 0.0073, meaning that rank explains 0.73% of the variance in teaching, which is not a lot.
 
 
-## 
-For Exercise 12, relevel() function can be helpful! 
+## Exercise 14
+Creating a factor variable for tenure eligible or not:
+```{r make-tenure-eligible}
+evals_df <- evals_df %>% 
+  mutate(tenure_eligible = case_when(
+    rank == "tenure track" ~ "yes",
+    rank == "tenured" ~ "yes",
+    rank == "teaching" ~ "no"
+  ))
+```
+
+
+## Exercise 15
+Fitting regression with new ordering for rank:
+```{r reg-tenure-eligible}
+m_tenure_eligible <- lm(score ~ tenure_eligible, data = evals_df)
+summary(m_tenure_eligible)
+```
+y = 4.28 - 0.14x(tenure eligible)
+
+The initial rating (which corresponds to that of professors not being tenure eligible), is 4.28. Then, if the professor is tenure eligible, they get a decrease in their score of 0.14 points.
+
+The adjusted R^2 is 0.0093, meaning that tenure eligibility explains 0.93% of the variance in teaching, which is not a lot.

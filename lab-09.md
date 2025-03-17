@@ -1,7 +1,7 @@
 Lab 09 - Grading the professor, Pt. 1
 ================
-Insert your name here
-Insert date here
+Linn Zapffe
+03/03/2025
 
 ### Load packages and data
 
@@ -130,7 +130,7 @@ evals %>%
   ylim(0, 10)
 ```
 
-    ## Warning: Removed 3 rows containing missing values or values outside the scale range
+    ## Warning: Removed 8 rows containing missing values or values outside the scale range
     ## (`geom_point()`).
 
 ![](lab-09_files/figure-gfm/plot-score-beauty-jitter-1.png)<!-- -->
@@ -298,8 +298,100 @@ teaching), is 4.28. Then, if the professor is instead tenure track, they
 get a decrease in their score of 0.12 points, or if they are tenured,
 they get a decrease in their score of 0.14.
 
-### Exercise 11
+### Exercise 12
 
-## 
+Creating a factor variable for rank and make tenure track the baseline:
 
-For Exercise 12, relevel() function can be helpful!
+``` r
+evals_df <- evals %>% 
+  mutate(rank_relevel = factor(rank, levels = c("tenure track", "tenured", "teaching")))
+```
+
+## Exercise 13
+
+Fitting regression with new ordering for rank:
+
+``` r
+m_rank_relevel <- lm(score ~ rank_relevel, data = evals_df)
+summary(m_rank_relevel)
+```
+
+    ## 
+    ## Call:
+    ## lm(formula = score ~ rank_relevel, data = evals_df)
+    ## 
+    ## Residuals:
+    ##     Min      1Q  Median      3Q     Max 
+    ## -1.8546 -0.3391  0.1157  0.4305  0.8609 
+    ## 
+    ## Coefficients:
+    ##                      Estimate Std. Error t value Pr(>|t|)    
+    ## (Intercept)           4.15463    0.05214  79.680   <2e-16 ***
+    ## rank_releveltenured  -0.01550    0.06228  -0.249   0.8036    
+    ## rank_relevelteaching  0.12968    0.07482   1.733   0.0837 .  
+    ## ---
+    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+    ## 
+    ## Residual standard error: 0.5419 on 460 degrees of freedom
+    ## Multiple R-squared:  0.01163,    Adjusted R-squared:  0.007332 
+    ## F-statistic: 2.706 on 2 and 460 DF,  p-value: 0.06786
+
+y = 4.15 - 0.02x(tenured) + 0.13x(teaching)
+
+The initial rating (which corresponds to that of tenured professors), is
+4.15. Then, if the professor is instead tenured, they get a decrease in
+their score of 0.02 points, or if they are just teaching, they get an
+increase in their score of 0.13.
+
+The adjusted R^2 is 0.0073, meaning that rank explains 0.73% of the
+variance in teaching, which is not a lot.
+
+## Exercise 14
+
+Creating a factor variable for tenure eligible or not:
+
+``` r
+evals_df <- evals_df %>% 
+  mutate(tenure_eligible = case_when(
+    rank == "tenure track" ~ "yes",
+    rank == "tenured" ~ "yes",
+    rank == "teaching" ~ "no"
+  ))
+```
+
+## Exercise 15
+
+Fitting regression with new ordering for rank:
+
+``` r
+m_tenure_eligible <- lm(score ~ tenure_eligible, data = evals_df)
+summary(m_tenure_eligible)
+```
+
+    ## 
+    ## Call:
+    ## lm(formula = score ~ tenure_eligible, data = evals_df)
+    ## 
+    ## Residuals:
+    ##     Min      1Q  Median      3Q     Max 
+    ## -1.8438 -0.3438  0.1157  0.4360  0.8562 
+    ## 
+    ## Coefficients:
+    ##                    Estimate Std. Error t value Pr(>|t|)    
+    ## (Intercept)          4.2843     0.0536  79.934   <2e-16 ***
+    ## tenure_eligibleyes  -0.1406     0.0607  -2.315    0.021 *  
+    ## ---
+    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+    ## 
+    ## Residual standard error: 0.5413 on 461 degrees of freedom
+    ## Multiple R-squared:  0.0115, Adjusted R-squared:  0.009352 
+    ## F-statistic: 5.361 on 1 and 461 DF,  p-value: 0.02103
+
+y = 4.28 - 0.14x(tenure eligible)
+
+The initial rating (which corresponds to that of professors not being
+tenure eligible), is 4.28. Then, if the professor is tenure eligible,
+they get a decrease in their score of 0.14 points.
+
+The adjusted R^2 is 0.0093, meaning that tenure eligibility explains
+0.93% of the variance in teaching, which is not a lot.

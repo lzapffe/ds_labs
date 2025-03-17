@@ -38,7 +38,7 @@ title_vect_p1 <- page %>%
 title_vect_p1 <- title_vect_p1 %>%
   str_squish()
 
-# That removed the uneccessary white spaces from the strings
+# That removed the unneccessary white spaces from the strings
 
 
 ## Getting the URLs ###############
@@ -58,8 +58,11 @@ url_vect_p1 <- url_vect_p1 %>%
 
 ## Getting the artist names ########################
 artist_vect_p1 <- page %>%
-  html_nodes(".artist") %>%
+  html_nodes(".iteminfo") %>%
+  html_node(".artist") %>%
   html_text()
+
+# After looking at Cynthia's approach, I realized that the problem with my code was that I used html_nodes, which doesn't work as well with missing data. She used html_node, which worked way better. So, I have changed to html_node in my code after realizing that.
 
 
 ## Organizing everything as a tibble ##############
@@ -91,6 +94,8 @@ url_vect_p2 <- page %>%
 artist_vect_p2 <- page %>%
   html_nodes(".artist") %>%
   html_text()
+
+# Now this code doesn't work with html_node, just html_nodes. This is apparently because I don't have html_nodes(".iteminfo") first.
 
 
 ## Organizing everything as a tibble ##############

@@ -32,22 +32,44 @@ uoe_art <- read_csv("data/uoe-art.csv")
 
 ### Exercise 9
 
-```{r separate-title-date, error = TRUE}
+```{r separate-title-date, error = TRUE, eval = FALSE}
 uoe_art <- uoe_art %>%
   separate(title, into = c("title", "date"), sep = "\\(") %>%
   mutate(year = str_remove(date, "\\)") %>% as.numeric()) %>%
   select(title, artist, year, ___)
 ```
 
-### Exercise 10
 
-Remove this text, and add your answer for Exercise 10 here.
-Add code chunks as needed.
-Don't forget to label your code chunk.
-Do not use spaces in code chunk labels.
 
-### Exercise 11
+### I gave up - Wrap-up reflection
 
-...
+So, this lab has given me an introduction to how many ways in which you can break web scraping. I webscraped the first two pages manually, then made a function to do it. The function worked well when I tested it on the first few pages. However, when I came back to it a week or two later, I got an error running the function. Testing and trying showed that there was a problem with some of the entries, so that when there was no author for one art piece, it extracted only 9 authors instead of 10, which made the code fail when trying to create a data frame out of it (expecting 10 rows). It seems like something on the webpage changed between those weeks I didn't work on the project.
 
-Add exercise headings as needed.
+There were several other students that managed to do the lab successfully, so I looked at their code to see what was different.
+
+Cynthia used this code to scrape the artists:
+page %>%
+  html_nodes(".iteminfo") %>%
+  html_node(".artist") %>%
+  html_text()
+  
+While I used this code:
+page %>%
+  html_nodes(".iteminfo") %>%
+  html_nodes(".artist") %>%
+  html_text()
+  
+The difference here is in using html_nodes vs html_node.
+
+Looking into the difference between html_nodes and html_node, it seems like html_node gives you the same number of outputs as inputs, while html_nodes gives you a number of outputs based on the data. Therefore, in Cynthia's code, she is putting in one page and using html_nodes to get a free number of outputs. In this case, it is 10 since there are 10 data entires. Then, she is using html_node, which is restricted to the same number of outputs as inputs, so that you get 10 authors, even if there are 2 authors for one art piece or no authors. It will then include both authors for one art piece or put in "unknown" when there is no author. In my code, I am running html_nodes first which gives me 10 outputs, one for each art piece, then when running html_nodes again, the function is not restricted to 10 outputs, so it will divide 2 authors into separate instances, producing a vector of 11 elements, or delete the item with unknown, producing a vector of 9 elements.
+
+When fixing this up (before looking too closely into why html_node worked, but not html_nodes) I later tried running 
+page_sec %>%
+  html_node(".artist") %>%
+  html_text()
+
+as I also while doing the lab early, noticed that you do not need the "html_nodes(".iteminfo") %>%" part of the code to get the artist names. However, in this case, this doesn't work, since I am here saying to only get one output, since there is only one input, the page. It therefore only gives me the last artist name. The "html_nodes(".iteminfo") %>%" part therefore serves to restict the output to 10 elements. So it technically isn't needed to get the artist names, but it serves to restrict the output to 10 names for the next code, getting the artist names.
+
+When looking at all of this, I noticed that html_node() and html_nodes() are deprecated and should instead now be html_element() and html_elements(). I did at some point get better output when using html_element(s) than html_node(s), but I can't replicate it anymore. The safest option seems to be to use html_elements() with the .iteminfo to get 10 outputs, and then restrict it to 10 outputs by using html_element() afterward.
+
+So, I have learned how quickly web scraping can break when someone changes the webpage you are scraping from. I have also learned that you probably want to do extra checks when web scraping because there are so many ways in which it can break. Next time, I will be more prepared, as I have learned the trick with restricting output by using html_element() and html_elements().
