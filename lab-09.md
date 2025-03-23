@@ -122,7 +122,7 @@ evals %>%
   ggplot(aes(x = score, y = bty_avg)) +
   geom_jitter(color = "blue") +
   labs(
-    title = "Relationship Between the Professor Evaluations and their Beauty Score - with Jitter",
+    title = str_wrap("Relationship Between the Professor Evaluations and their Beauty Score - with Jitter", width = 80),
     x = "Score",
     y = "Beauty Score"
   ) +
@@ -130,7 +130,7 @@ evals %>%
   ylim(0, 10)
 ```
 
-    ## Warning: Removed 8 rows containing missing values or values outside the scale range
+    ## Warning: Removed 9 rows containing missing values or values outside the scale range
     ## (`geom_point()`).
 
 ![](lab-09_files/figure-gfm/plot-score-beauty-jitter-1.png)<!-- -->
@@ -139,22 +139,23 @@ Figured out that using both geom_point and geom_jitter doesn’t work very
 well, because it essentially duplicates all the data and shows twice as
 many data points as are actually in the data set.
 
-Jitter adds a little bit of random noise to our data set, so that data
-points with the same value will be slightly different. This is
-beneficial for plotting because it won’t show the data points as being
-on top of each other (looking like there is only one), but will instead
-make them clustered around the original value, showing the number of
-data points around that value accurately. With jitter, you can now see
-that there are a lot of data points around the beauty scores of 2.5 \< x
-\< 5, which wasn’t clear in the graph without jittering.
+Jitter without geom_point does however add a little bit of random noise
+to our data set, so that data points with the same value will be
+slightly different. This is beneficial for plotting because it won’t
+show the data points as being on top of each other (looking like there
+is only one), but will instead make them clustered around the original
+value, showing the number of data points around that value accurately.
+With jitter, you can now see that there are a lot of data points around
+the beauty scores of 2.5 \< x \< 5, which wasn’t clear in the graph
+without jitter.
 
 ### Exercise 4
 
 Fitting a linear model between professor rating and beauty score:
 
 ``` r
-model <- lm(score ~ bty_avg, data = evals)
-model
+m_bty <- lm(score ~ bty_avg, data = evals)
+m_bty
 ```
 
     ## 
@@ -179,7 +180,7 @@ evals %>%
   geom_jitter(color = "blue") +
   geom_smooth(method = "lm", se = FALSE, linewidth = 1.25, color = "orange") +
   labs(
-    title = "Relationship Between the Professor Evaluations and their Beauty Score - with Jitter and a Regression Line",
+    title = str_wrap("Relationship Between the Professor Evaluations and their Beauty Score - with Jitter and a Regression Line", width = 80),
     x = "Score",
     y = "Beauty Score"
   ) +
@@ -189,30 +190,33 @@ evals %>%
 
     ## `geom_smooth()` using formula = 'y ~ x'
 
-    ## Warning: Removed 6 rows containing missing values or values outside the scale range
+    ## Warning: Removed 4 rows containing missing values or values outside the scale range
     ## (`geom_point()`).
 
 ![](lab-09_files/figure-gfm/plot-score-beauty-jitter-regression-1.png)<!-- -->
 
 ### Exercise 6
 
-The professor ratings (from 0 to 5) will increase by 0.067 points per
-beauty point (0-10): Professor ratings therefore seem to be affected by
-beauty points, but it is far from the only facotr affecting them. You
-can for example not get more of a boost than 0.67 points in the score
-from beauty points.
+The slope means that professor ratings (from 0 to 5) will increase by
+0.067 points per beauty point (0-10): Professor ratings therefore seem
+to be affected by beauty points, but it is far from the only factor
+affecting them. You can for example not get more of a boost than 0.67
+points from a full beauty score, which only explain a smaller portion of
+the variance in the professor evaluations.
 
 ### Exercise 7
 
 The intercept of the model is 3.88, meaning that a professor with a
-beauty rating of 0 will likely get a professor rating of 3.88.
+beauty rating of 0 will likely get a professor rating of 3.88. This
+intercept doesn’t make much sense, since you can’t really get a beauty
+score of 0; 1 would be the lowest possible score.
 
 ### Exercise 8
 
 Getting the R^2 of our model:
 
 ``` r
-summary(model)
+summary(m_bty)
 ```
 
     ## 
@@ -235,8 +239,7 @@ summary(model)
     ## F-statistic: 16.73 on 1 and 461 DF,  p-value: 5.083e-05
 
 The R^2 of the model is 0.035, with an adjusted R^2 of 0.033. That means
-that beauty scores explain 3.5% of the variance in professor ratings,
-which is not a lot.
+that beauty scores explain 3.5% of the variance in professor ratings.
 
 ### Exercise 9
 
@@ -258,17 +261,17 @@ m_gen
 
 y = 4.09 + 0.14x
 
-The x variable is whether the professor is male. Therefore, the
-intercept is the rating of female professors, that are 4.09. If the
-professor is instead male, they get an additional 0.14 points in their
-rating. This is a little boost, but not a whole lot considering that the
-ratings range from 0 to 5. It is however interesting to note that this
-is equivalent to the rating increase from being 2 points higher on
-beauty ratings.
+Where the x variable is whether the professor is male. Therefore, the
+intercept is the overall rating of female professors, which is 4.09. If
+the professor is instead male, they get an additional 0.14 points in
+their rating. This is a little boost, but not a whole lot considering
+that the ratings range from 0 to 5. It is however interesting to note
+that this is equivalent to the rating increase from being 2 points
+higher on beauty ratings.
 
 ### Exercise 10
 
-Male professor: 4.09 + 0.14 Female professor: 4.09
+Male professor: 4.09 + 0.14 = 4.23 Female professor: 4.09
 
 ### Exercise 11
 
@@ -289,14 +292,15 @@ m_rank
     ##           4.2843           -0.1297           -0.1452
 
 According to ?evals, there are 3 types of ranks: teaching, tenure track,
-tenured
+and tenured
 
 y = 4.28 - 0.13x(tenure track) - 0.15x(tenured)
 
 The initial rating (which corresponds to that of professors just
-teaching), is 4.28. Then, if the professor is instead tenure track, they
-get a decrease in their score of 0.12 points, or if they are tenured,
-they get a decrease in their score of 0.14.
+teaching), is 4.28. So a teaching professor has an overall rating of
+4.28. Then, if the professor is instead tenure track, they get a
+decrease in the score of that of teaching professors of 0.12 points, or
+if they are tenured, they get a decrease in their score of 0.14.
 
 ### Exercise 12
 
@@ -338,17 +342,19 @@ summary(m_rank_relevel)
 
 y = 4.15 - 0.02x(tenured) + 0.13x(teaching)
 
-The initial rating (which corresponds to that of tenured professors), is
-4.15. Then, if the professor is instead tenured, they get a decrease in
-their score of 0.02 points, or if they are just teaching, they get an
-increase in their score of 0.13.
+The initial rating (which corresponds to that of tenure track
+professors), is 4.15. Then, if the professor is instead tenured, they
+get a decrease in their score of 0.02 points, while if they are just
+teaching, they get an increase in their score of 0.13.
 
-The adjusted R^2 is 0.0073, meaning that rank explains 0.73% of the
-variance in teaching, which is not a lot.
+The R^2 is .011 and the adjusted R^2 is 0.0073, meaning that rank
+explains 1.1% (for multiple R^2) or 0.73% (according to the adjusted
+R^2) of the variance in teaching, which is not a whole lot.
 
 ## Exercise 14
 
-Creating a factor variable for tenure eligible or not:
+Creating a factor variable for tenure eligible or not by combining
+tenure track and tenured into one category:
 
 ``` r
 evals_df <- evals_df %>% 
@@ -391,7 +397,8 @@ y = 4.28 - 0.14x(tenure eligible)
 
 The initial rating (which corresponds to that of professors not being
 tenure eligible), is 4.28. Then, if the professor is tenure eligible,
-they get a decrease in their score of 0.14 points.
+they get a decrease in their rating by 0.14 points.
 
 The adjusted R^2 is 0.0093, meaning that tenure eligibility explains
-0.93% of the variance in teaching, which is not a lot.
+0.93% of the variance in teaching, which is not a lot (and less than
+when we had 3 categories instead of two).

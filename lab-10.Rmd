@@ -1,7 +1,7 @@
 ---
 title: "Lab 10 - Grading the professor, Pt. 2"
-author: "Insert your name here"
-date: "Insert date here"
+author: "Linn Zapffe"
+date: "19/03/2025"
 output: github_document
 ---
 
@@ -15,13 +15,61 @@ library(openintro)
 
 ### Exercise 1
 
-Remove this text, and add your answer for Exercise 1 here.
-Add code chunks as needed.
-Don't forget to label your code chunk.
-Do not use spaces in code chunk labels.
+Fitting a linear model between professor rating and beauty score:
+```{r reg-rating-beauty}
+m_bty <- lm(score ~ bty_avg, data = evals)
+m_bty
+```
+
+The linear model is teacher rating = 3.88 + 0.067 * beauty rating.
+
+```{r sum-rating-beauty}
+summary(m_bty)
+```
+
+The R^2 is .035 and the adjusted R^2 is .033. So 3.5 or 3.3% of the variance in professor rankings is explained by beauty scores.
 
 ### Exercise 2
 
-...
+Fitting a linear model between professor rating and beauty score + gender:
+```{r reg-rating-beauty-gender}
+m_bty_gen <- lm(score ~ bty_avg + gender, data = evals)
+m_bty_gen
+```
+The model is professor rankings = 3.75 + 0.074 * beauty ranking + 0.17 (if the professor is male).
 
-Add exercise headings as needed.
+```{r sum-rating-beauty-gender}
+summary(m_bty_gen)
+```
+
+The R^2 is .059 and the adjusted R^2 is .055. So 5.9 or 5.5% of the variance in professor rankings is explained by beauty scores and the professors' gender.
+
+
+## Exercise 3
+
+I didn't fit this model with an interaction, so I will fit another model with the interaction.
+
+Fitting a linear model between professor rating and beauty score + gender, with an interaction:
+```{r reg-rating-beauty-gender-int}
+m_bty_gen_int <- lm(score ~ bty_avg + gender + bty_avg*gender, data = evals)
+m_bty_gen_int
+```
+
+The slope is in this case the professor ranking if they have a beauty score of 0 and are female. The interaction is how much more of a boost in ranking the professor gets for each additional beauty score because they are male (so in addition to the 0.031 boost per beauty score).
+
+## Exercise 4
+
+```{r sum-rating-beauty-gender-int}
+summary(m_bty_gen_int)
+```
+
+According to our R^2 value, 7.1% of the variance in professor rankings are explained by our model: beauty scores, gender, and the interaction between beauty scores and gender. If we use the adjusted R^2, it is 6.5%.
+
+
+## Exercise 5
+
+The professor rankings of male professors is:
+
+professor rankings = 3.95 + 0.031 * beauty ranking - 0.18 (if the professor is male) + 0.080 per beauty ranking if professor is male.
+
+THIS QUESTION IS NOT FINISHED
