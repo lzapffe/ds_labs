@@ -7,57 +7,9 @@ Linn Zapffe
 
 ``` r
 library(tidyverse) 
-```
-
-    ## Warning: package 'ggplot2' was built under R version 4.3.3
-
-    ## Warning: package 'tidyr' was built under R version 4.3.3
-
-    ## Warning: package 'readr' was built under R version 4.3.3
-
-    ## Warning: package 'purrr' was built under R version 4.3.3
-
-    ## Warning: package 'lubridate' was built under R version 4.3.3
-
-``` r
 library(tidymodels)
-```
-
-    ## Warning: package 'tidymodels' was built under R version 4.3.3
-
-    ## Warning: package 'broom' was built under R version 4.3.3
-
-    ## Warning: package 'dials' was built under R version 4.3.3
-
-    ## Warning: package 'infer' was built under R version 4.3.3
-
-    ## Warning: package 'modeldata' was built under R version 4.3.3
-
-    ## Warning: package 'parsnip' was built under R version 4.3.3
-
-    ## Warning: package 'recipes' was built under R version 4.3.3
-
-    ## Warning: package 'rsample' was built under R version 4.3.3
-
-    ## Warning: package 'tune' was built under R version 4.3.3
-
-    ## Warning: package 'workflows' was built under R version 4.3.3
-
-    ## Warning: package 'workflowsets' was built under R version 4.3.3
-
-    ## Warning: package 'yardstick' was built under R version 4.3.3
-
-``` r
 library(openintro)
 ```
-
-    ## Warning: package 'openintro' was built under R version 4.3.3
-
-    ## Warning: package 'airports' was built under R version 4.3.3
-
-    ## Warning: package 'cherryblossom' was built under R version 4.3.3
-
-    ## Warning: package 'usdata' was built under R version 4.3.3
 
 ### Exercise 1
 
@@ -77,6 +29,8 @@ m_bty
     ##     3.88034      0.06664
 
 The linear model is teacher rating = 3.88 + 0.067 \* beauty rating.
+
+Finding the R^2:
 
 ``` r
 summary(m_bty)
@@ -174,10 +128,15 @@ m_bty_gen_int
     ##        (Intercept)             bty_avg          gendermale  bty_avg:gendermale  
     ##            3.95006             0.03064            -0.18351             0.07962
 
-The slope is in this case the professor ranking if they have a beauty
-score of 0 and are female. The interaction is how much more of a boost
-in ranking the professor gets for each additional beauty score because
-they are male (so in addition to the 0.031 boost per beauty score).
+The intercept is in this case the professor ranking if they have a
+beauty score of 0 and are female, which is 3.95. The interaction is how
+much more of a boost in ranking the professor gets for each additional
+beauty score because they are male (so in addition to the 0.031 boost
+per beauty score). The slope for beauty scores is 0.03, indicating that
+for each beauty point, the professor rankings increase by 0.03
+(independently from gender). The slope for gender is -0.18, indicating
+that the professor ranking decreases with 0.18 points if the professor
+is male compared to female (independent of beauty ranking).
 
 ## Exercise 4
 
@@ -213,14 +172,15 @@ between beauty scores and gender. If we use the adjusted R^2, it is
 
 ## Exercise 5
 
-The professor rankings of male professors is:
+The general equation for the model is:
 
 professor rankings = 3.95 + 0.031 \* beauty ranking - 0.18 (if the
 professor is male) + 0.080 per beauty ranking if professor is male.
 
-The equation if the professor is male is 3.95 + 0.031 \* beauty
-ranking - 0.18 + 0.080 per beauty ranking if professor is male = 3.77 +
-0.031 \* beauty ranking + 0.080 per beauty ranking if professor is male
+The equation if the professor is male is therefore 3.95 + 0.031 \*
+beauty ranking - 0.18 + 0.080 per beauty ranking if professor is male =
+3.77 + 0.031 \* beauty ranking + 0.080 per beauty ranking if professor
+is male
 
 ## Exercise 6
 
@@ -229,7 +189,7 @@ they get a general penalty of -0.18 points, but also get 0.080
 additional points for the ranking per beauty score. So unless the
 professor in question get ranked as very low in beauty, male professors
 will get a higher score than female professors with the same beauty
-rankings
+rankings.
 
 ## Exercise 7
 
@@ -239,13 +199,15 @@ rankings for male than female professors.
 
 ## Exercise 8
 
-The R^2 for m_bty_gen_int is 0.071, while it is .035 for m_bty. The
-model with beauty, gender and the interaction therefore seem to explain
-twice the amount of variance in the professor rankings compared to the
-model using just the beauty scores.
+The R^2 (unadjusted) for m_bty_gen_int is 0.071, while it is .035 for
+m_bty. The model with beauty, gender and the interaction therefore seem
+to explain twice the amount of variance in the professor rankings
+compared to the model using just the beauty scores.
 
 Gender (and its interaction with beauty scores) therefore seem to
 explain an additional 0.036 of the variance in professor rankings.
+
+Looking at the adjusted R^2 gives a similar result.
 
 ## Exercise 9
 
@@ -319,19 +281,21 @@ m_bty_num_prof
 
 If the professor is the only one teaching sections in a course, the
 professor ranking decreases by 0.04 points. This is not nothing, but not
-a lot. There could be other predcitors that explain less variance in the
-data set though.
+a lot. There could be other predictors that explain less variance in the
+data set though, so cls_profs might not have been the worst predictor in
+the data set.
 
 ## Exercise 13
 
 If I am including cls_perc_eval and cls_students in my model, I would
 not want to include cls_did_eval. This is because cls_perc_eval is the
-percent of students completing the evaluation, whicl cls_students is the
+percent of students completing the evaluation, while cls_students is the
 number of students in the class. The product of these two variables
 would be equal to the variable cls_did_eval. We therefore do not want to
 include this variable as it would be perfectly related to the other two
 variables and the predictive power of them would be masked as the
-estimates only show unique predictive power.
+estimates only show unique predictive power. In more technical terms,
+there would be a high colinearity between those predictors.
 
 ## Exercise 14
 
@@ -372,7 +336,8 @@ for the cls_students predictor in the model.
 ## Exercise 15
 
 Fitting a linear model between professor rating and all variables except
-for cls_did_eval, then going backwards and removing variables:
+for cls_did_eval, then going backwards and removing variables - First
+try:
 
 ``` r
 m_bty_all_backwards <- lm(score ~ ethnicity + gender + language + cls_credits + bty_avg, data = evals)
@@ -404,7 +369,8 @@ summary(m_bty_all_backwards)
     ## F-statistic: 13.24 on 5 and 457 DF,  p-value: 4.64e-12
 
 Fitting a linear model between professor rating and all variables except
-for cls_did_eval, then going backwards and removing variables::
+for cls_did_eval, then going backwards and removing variables - Second
+try:
 
 ``` r
 m_bty_all_backwards <- lm(score ~ ethnicity + gender + cls_perc_eval + cls_credits + bty_avg, data = evals)
@@ -435,25 +401,25 @@ summary(m_bty_all_backwards)
     ## Multiple R-squared:  0.146,  Adjusted R-squared:  0.1366 
     ## F-statistic: 15.62 on 5 and 457 DF,  p-value: 3.338e-14
 
-I tried to approaches since my first one didn’t work that well.
+I tried two approaches since my first one didn’t work that well.
 Originally, I removed the predictors with the lowest estimates one by
 one. Then next time, I removed then based on p-values, which worked
 better. The second model explain 13.66% of the variance, while the first
 explains 11.70% of the variance in professor rankings.
 
-Professor rankings = 3.14 + 0.23 if professor is not an ethnic
-minority + 0.16 if professor is male + 0.005 per percent of students
-completed the evaulation 0.54 if class is one credit + 0.74 per beauty
-score.
+The formula for the final model (the second one) is: Professor rankings
+= 3.14 + 0.23 if professor is not an ethnic minority + 0.16 if professor
+is male + 0.005 per percent of students completed the evaluation + 0.54
+if class is one credit + 0.74 per beauty score.
 
 ## Exercise 16
 
-The slope for not being a minority is 0.233794, so if the professor is
-not an ethnic minority, they get a boost in ranking of 0.23, while if
-they are a minority, they do not get this boost.
+The slope for not being a minority (categorical) is 0.23, so if the
+professor is not an ethnic minority, they get a boost in ranking of
+0.23, while if they are a minority, they do not get this boost.
 
-The slope for bty_avg is 0.073, so for each additional beauty point, the
-ranking increases by 0.073.
+The slope for bty_avg (continuous) is 0.073, so for each beauty point,
+the ranking increases by 0.073.
 
 ## Exercise 17
 
@@ -468,10 +434,10 @@ There is probably some truth to these characteristics and the rankings
 professors get. However, there might also be some characteristics that
 are more specific to the University of Austin Texas due to its location
 and characteristics of the student body. There would maybe for example
-not be as much of a difference in etnic minority status in an university
-that has a larger percent of their student body that is an ethinc
-minority themselves. I would therefore not generalize it to all other
-universities, but rather instead consider it a general suggestion of
-what seems to matter for professor rankings, which require more broad
-data or data specific to the university of interest to draw more certain
-conclusions.
+not be as much of a difference in ethnic minority status in an
+university that has a larger percent of their student body that is an
+ethnic minority themselves than what I imagine there is at University of
+Texas. I would therefore not generalize it to all other universities,
+but rather instead consider it a general suggestion of what seems to
+matter for professor rankings, which require more broad data or data
+specific to the university of interest to draw more certain conclusions.

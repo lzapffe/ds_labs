@@ -2,14 +2,13 @@
 
 library(tidyverse)
 library(rvest)
-library(here) 
 
 # function: scrape_pac ---------------------------------------------------------
 
 scrape_pac <- function(url) {
   
   # read the page
-  page <- ___(___)
+  page <- read_html(url)
   
   # extract the table
   pac <-  page %>%
@@ -49,8 +48,8 @@ scrape_pac <- function(url) {
 
 # test function ----------------------------------------------------------------
 
-url_2020 <- "___"
-pac_2020 <- scrape_pac(___)
+url_2020 <- "https://www.opensecrets.org/political-action-committees-pacs/foreign-connected-pacs/2020"
+pac_2020 <- scrape_pac(url_2020)
 
 url_2018 <- "___"
 pac_2018 <- scrape_pac(___)
@@ -76,3 +75,21 @@ pac_all <- ___(___, ___)
 # write data -------------------------------------------------------------------
 
 write_csv(___, file = here::here("data/pac-all.csv"))
+
+
+
+read_html("https://www.opensecrets.org/political-action-committees-pacs/foreign-connected-pacs/2020")
+
+read_html("https:////www.opensecrets.org//political-action-committees-pacs//foreign-connected-pacs//2020")
+
+read_html("https:\\www.opensecrets.org\political-action-committees-pacs\foreign-connected-pacs\2020")
+
+# This works
+read_html("https://collections.ed.ac.uk/art/search/*:*/Collection:%22edinburgh+college+of+art%7C%7C%7CEdinburgh+College+of+Art%22?offset=0")
+
+# This doesn't
+read_html("https://www.opensecrets.org")
+
+# But this says I should have access to the page
+library(robotstxt)
+paths_allowed("https://www.opensecrets.org")

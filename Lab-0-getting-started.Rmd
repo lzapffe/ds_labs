@@ -1,0 +1,94 @@
+---
+title: "Lab 0 - Getting started"
+author: "Linn Zapffe"
+date: "2025-04-23"
+output: html_document
+---
+
+I made this lab instead of doing one myself. I remember the beginning of the class being  overwhelming and confusing for some people, so I will make a lab that goes over how to get started and set up the class. This will be especially helpful for when the class is adapted for undergrads.
+
+One of the main changes that would make the beginning of the class easier is:
+Change up module 0 and 1 and lab 1. Make the things they are doing clearer and not have unecessary information this early on.
+
+Strip out all of the customization and cool stuff from the first one or two modules. It is fine later on, but to beging with everything is new and overwhelming. I think you would be better off giving students just the bare minimum and keep all customizations and cool things as either ODD or as cool facts later.
+
+The thought is that lab 0 can be included in module 0. However, module 0 and 1 should probably be edited a little for this lab to fit in. I think that will overall make the ease into the class easier. I am basing this on my experinece (as I didn't know Git before starting), as well as all of the students I was helping during the first few weeks of the class. Some problems kept coming up and I have tried to make this lab so that those confusions won't occur as much.
+
+Some other general notes:
+
+- The language is too technical in the beginning, it is probably intimidating for people that are already overwhelmed by all the new stuff. For example, "Install R, a free software environment for statistical computing and graphics from CRAN, the Comprehensive R Archive Network. I highly recommend you install a precompiled binary distribution for your operating system – use the links up at the top of the CRAN page linked above!" Dumb it down to the bare necessities, students don't need to know all of this. It is like the scaffolding with the labs, you start with a lot of scaffolding (and dumbing down) and then you can add more advanced stuff (and language) later.
+
+Lab 0 - Setting up the course
+
+- A quick overview of the course
+  - What each week looks like
+  - Modules, videos and articles
+  - Activities
+  - Labs
+- Reading the syllabus
+- Downloading R and R studio
+  - Printing hello world?
+- Difference between R and R studio, file types, knitting
+- Introduce github, what is it, how does it work
+  - Info about push and pull
+    - videos?
+- Find the contract and make it
+- Setting up portfolios
+  - Getting the webpage
+  - Making changes and pushing them
+- How to find labs
+  - Find lab 0 and fill out the questions
+    - Just checking whether they have done everything and have them write a few things. Have something to hand in and go through the motions, so that lab 2 seems easier
+
+
+# Lab 0 - Getting Started and Setting up the Course
+
+Hi, welcome to the first lab in your data science class! The following lab will help you get an overview over the course, getting started with R, and setting up the course. After doing this lab, you should be ready to start fully engaging in the course and to code. There are a lot of new concepts and programs when starting to code. However, if you get past this first bit of the class, it will get more familiar to you and it will get easier.
+
+## Course Overview
+
+There are several components to the class. The biggest component is the modules. Every week, you will work on a module. Each module has videos, slides, and articles that will guide you through the material covered in that module. Some modules have activities that you can work on to learn the skills that are covered in the modules.
+
+Furthermore, there are two types of assignments in the class: labs and portfolio projects. There is a lab after every module. So after working through the module and learning about a topic, you can try it out and show what you have learned in the lab. The portfolio projects are done on the side and are a place where you can show what you have learned in broader terms. Maybe you want to build on something you learned from a module? Maybe you want to try out something you learned from a module on your own data (like your thesis data)? Or maybe there is something else you are curious about that you would like to learn more about? All of these are great things to do for your portfolio projects.
+
+<!--I didn't include any more information about grades and number of assignments, as I just want to introduce the overall structure of the class, especially since I will be referring to it later in the lab + they have all of that information available to them in the syllabus -->
+
+
+## Syllabus
+
+To get started with the class, you will want to know what is in the syllabus. Therefore, if you haven't already, read (or at least skim over) the syllabus. You can find it [here](https://smasongarrison.github.io/syllabi/index.html). There is a general part to the syllabus, as well as a part specific for this class. Read both the general and class-specific parts, that will set you up for doing well in the course.
+
+
+## Downloading R
+
+After you have read the syllabus, you will have to download the software that we will be using to program in this class. There are two things you need to install. The first is R, which is the actual program that runs your code and translate it into actions.
+
+If you have a Windows computer, go to this [page](https://cran.r-project.org/bin/windows/base/) and download R from the link saying "Download R for Windows". There will be a number in this title which is just the number of the current newest version, so it doesn't matter what the number is, as long as it says Download R.
+
+If you have a Mac, go to this [page](https://cran.r-project.org/bin/macosx/) and download R from the blue link to the left. It will say "R" with a number and some other letters. That is the link you want to click on to download R.
+
+If you have Linux, good for you! Go to this [page](https://cran.r-project.org/bin/linux/) and click through the relevant folders to get to the appropriate download file.
+
+Click through the different prompts to successfully install R.
+
+If you already have R installed on your computer from earlier, reinstall R to get the most up-to-date version.
+
+
+## Testing R
+
+Now, let's make sure you successfully downloaded R on your computer.
+
+On Windows, click the Windows symbol in the bottom left corner of your computer. Write "R" and see whether you can see an app called R x.x.x where the x's are some numbers indicating your version of R. If you can't see it, go to the Apps tab in the menu and you should find it there.
+
+On Mac, you can either click the Blue R icon with a grey circle behind it or search for the R program by clicking Command and space, and typing R. You will then see a program called R x.x.x where the x's are some numbers indicating your version of R.
+
+
+You have now just opened R for the first time. To test it out, you can type in a command which is traditionally the first thing code one writes when learning programming. Type in "print("Hello World!")" without the first and last quotation marks in the white box. You should get an output stating "[1] "Hello World!"". You just ran your first code, asking R to print the text Hello World!.
+
+
+## Downloading RStudio
+
+As you might have noticed when writing this R code, is that the R program has a very basic user interface (layout). The design is rather old and there are not a lot of buttons and options. The R programming language is in itself very well-done and advanced. However, it is made for coding, not to have a cool layout and a lot of options outside the code. People therefore generally 
+
+
+Have them open R and test it out. Explain what it is, then introduce R studio

@@ -1,7 +1,7 @@
 ---
 title: "Lab Money"
-author: "Insert your name here"
-date: "Insert date here"
+author: "Linn Zapffe"
+date: "31/03/2025"
 output: github_document
 ---
 
@@ -11,7 +11,16 @@ output: github_document
 library(tidyverse) 
 library(tidymodels)
 library(openintro)
+library(robotstxt)
+library(scales)
 ```
+
+Checking that we have access to the webpage:
+```{r check-path-access}
+paths_allowed("https://www.opensecrets.org")
+```
+
+
 
 ### Exercise 1
 
